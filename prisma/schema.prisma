@@ -1,0 +1,669 @@
+// bilo Prisma schema
+// Notes:
+// - Enums for all role/status/type fields
+// - payment_transactions defined BEFORE payment_events (FK order)
+// - Unique constraint on swipes(user_id, property_id)
+// - Indexes on all FKs and hot filter columns
+// - created_at/updated_at + deleted_at (soft delete) where it makes sense
+// - JSON metadata fields where flexibility helps
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// SQLite compatibility note:
+// enum and Json fields are stored as String columns in this schema.
+
+// Core: Users / Preferences
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id                String             @id @default(uuid())
+  email             String             @unique
+  googleId          String?            @unique @map("google_id")
+  fullName          String             @map("full_name")
+  avatarUrl         String?            @map("avatar_url")
+  phone             String?
+  role              String             @default("TENANT")
+  verificationStatus String            @default("UNVERIFIED") @map("verification_status")
+  trustScore        Int                @default(50) @map("trust_score")
+  bio               String?
+  metadata          String?
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  deletedAt         DateTime?          @map("deleted_at")
+
+  preferences        UserPreference?
+  properties         Property[]
+  swipes             Swipe[]
+  matchesAsTenant    Match[]            @relation("MatchTenant")
+  matchesAsLandlord  Match[]            @relation("MatchLandlord")
+  sentMessages       Message[]          @relation("MessageSender")
+  leasesAsTenant     Lease[]            @relation("LeaseTenant")
+  leasesAsLandlord   Lease[]            @relation("LeaseLandlord")
+  paymentMethods     PaymentMethod[]
+  payments           Payment[]          @relation("PaymentPayer")
+  trustEvents        TrustEvent[]
+  trustScoreHistory  TrustScoreHistory[]
+  ratingsGiven       Rating[]           @relation("RatingFrom")
+  ratingsReceived    Rating[]           @relation("RatingTo")
+  favorites          Favorite[]
+  maintenanceRequests MaintenanceRequest[]
+  disputesOpened     Dispute[]          @relation("DisputeOpener")
+  disputesAgainst    Dispute[]          @relation("DisputeAgainst")
+  serviceRequests    ServiceRequest[]
+  aiConversations    AIConversation[]
+  notifications      Notification[]
+  auditLogs          AuditLog[]
+
+  @@index([role])
+  @@index([trustScore])
+  @@map("users")
+}
+
+model UserPreference {
+  id                String   @id @default(uuid())
+  userId            String   @unique @map("user_id")
+  budgetMin         Int      @default(0) @map("budget_min")
+  budgetMax         Int      @default(9999999) @map("budget_max")
+  preferredZone     String?  @map("preferred_zone")
+  preferredCity     String?  @map("preferred_city")
+  preferredLat      Float?   @map("preferred_lat")
+  preferredLng      Float?   @map("preferred_lng")
+  acceptsPets       Boolean  @default(false) @map("accepts_pets")
+  needsParking      Boolean  @default(false) @map("needs_parking")
+  needsFurnished    Boolean  @default(false) @map("needs_furnished")
+  wantsRoommate     Boolean  @default(false) @map("wants_roommate")
+  minBedrooms       Int?     @map("min_bedrooms")
+  metadata          String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Properties
+// ─────────────────────────────────────────────────────────────
+
+model Property {
+  id              String         @id @default(uuid())
+  landlordId      String         @map("landlord_id")
+  title           String
+  description     String
+  type            String         @default("APARTMENT")
+  status          String         @default("ACTIVE")
+  city            String
+  zone            String?
+  address         String?
+  lat             Float?
+  lng             Float?
+  monthlyPrice    Int            @map("monthly_price")
+  depositAmount   Int            @default(0) @map("deposit_amount")
+  currency        String         @default("USD")
+  bedrooms        Int            @default(1)
+  bathrooms       Int            @default(1)
+  areaM2          Int?           @map("area_m2")
+  furnished       Boolean        @default(false)
+  petsAllowed     Boolean        @default(false) @map("pets_allowed")
+  parking         Boolean        @default(false)
+  roommateOk      Boolean        @default(false) @map("roommate_ok")
+  availableFrom   DateTime?      @map("available_from")
+  metadata        String?
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  deletedAt       DateTime?      @map("deleted_at")
+
+  landlord        User             @relation(fields: [landlordId], references: [id])
+  images          PropertyImage[]
+  analytics       PropertyAnalytics?
+  swipes          Swipe[]
+  matches         Match[]
+  leases          Lease[]
+  favorites       Favorite[]
+  aiContext       AIPropertyContext?
+  propertyServices PropertyService[]
+  maintenanceRequests MaintenanceRequest[]
+
+  @@index([landlordId])
+  @@index([city])
+  @@index([zone])
+  @@index([status])
+  @@index([monthlyPrice])
+  @@map("properties")
+}
+
+model PropertyImage {
+  id         String   @id @default(uuid())
+  propertyId String   @map("property_id")
+  url        String
+  position   Int      @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@map("property_images")
+}
+
+model PropertyAnalytics {
+  id          String   @id @default(uuid())
+  propertyId  String   @unique @map("property_id")
+  viewCount   Int      @default(0) @map("view_count")
+  likeCount   Int      @default(0) @map("like_count")
+  matchCount  Int      @default(0) @map("match_count")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_analytics")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Swipes & Matches
+// ─────────────────────────────────────────────────────────────
+
+model Swipe {
+  id         String      @id @default(uuid())
+  userId     String      @map("user_id")
+  propertyId String      @map("property_id")
+  action     String
+  createdAt  DateTime    @default(now()) @map("created_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+  @@index([userId])
+  @@index([propertyId])
+  @@map("swipes")
+}
+
+model Match {
+  id           String      @id @default(uuid())
+  tenantId     String      @map("tenant_id")
+  landlordId   String      @map("landlord_id")
+  propertyId   String      @map("property_id")
+  status       String      @default("PENDING")
+  metadata     String?
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  acceptedAt   DateTime?   @map("accepted_at")
+  rejectedAt   DateTime?   @map("rejected_at")
+
+  tenant       User          @relation("MatchTenant", fields: [tenantId], references: [id])
+  landlord     User          @relation("MatchLandlord", fields: [landlordId], references: [id])
+  property     Property      @relation(fields: [propertyId], references: [id])
+  conversation Conversation?
+  lease        Lease?
+
+  @@unique([tenantId, propertyId])
+  @@index([landlordId])
+  @@index([propertyId])
+  @@index([status])
+  @@map("matches")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Conversations & Messages
+// ─────────────────────────────────────────────────────────────
+
+model Conversation {
+  id        String   @id @default(uuid())
+  matchId   String   @unique @map("match_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  match    Match     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String      @id @default(uuid())
+  conversationId String      @map("conversation_id")
+  senderId       String      @map("sender_id")
+  content        String
+  messageType    String      @default("TEXT") @map("message_type")
+  readAt         DateTime?   @map("read_at")
+  metadata       String?
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("MessageSender", fields: [senderId], references: [id])
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@map("messages")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Leases
+// ─────────────────────────────────────────────────────────────
+
+model Lease {
+  id            String      @id @default(uuid())
+  matchId       String      @unique @map("match_id")
+  propertyId    String      @map("property_id")
+  tenantId      String      @map("tenant_id")
+  landlordId    String      @map("landlord_id")
+  status        String      @default("DRAFT")
+  monthlyAmount Int         @map("monthly_amount")
+  depositAmount Int         @map("deposit_amount")
+  currency      String      @default("USD")
+  dueDay        Int         @default(1) @map("due_day")
+  startDate     DateTime    @map("start_date")
+  endDate       DateTime?   @map("end_date")
+  schedule      String?
+  metadata      String?
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  deletedAt     DateTime?   @map("deleted_at")
+
+  match     Match     @relation(fields: [matchId], references: [id])
+  property  Property  @relation(fields: [propertyId], references: [id])
+  tenant    User      @relation("LeaseTenant", fields: [tenantId], references: [id])
+  landlord  User      @relation("LeaseLandlord", fields: [landlordId], references: [id])
+  payments  Payment[]
+  ratings   Rating[]
+  disputes  Dispute[]
+  serviceRequests ServiceRequest[]
+  aiConversations AIConversation[]
+
+  @@index([tenantId])
+  @@index([landlordId])
+  @@index([propertyId])
+  @@index([status])
+  @@map("leases")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Payments
+// IMPORTANT: payment_transactions defined BEFORE payment_events
+// ─────────────────────────────────────────────────────────────
+
+model PaymentMethod {
+  id         String            @id @default(uuid())
+  userId     String            @map("user_id")
+  type       String
+  brand      String?
+  last4      String?
+  isDefault  Boolean           @default(false) @map("is_default")
+  metadata   String?
+  createdAt  DateTime          @default(now()) @map("created_at")
+  updatedAt  DateTime          @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
+
+  @@index([userId])
+  @@map("payment_methods")
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  leaseId         String        @map("lease_id")
+  payerId         String        @map("payer_id")
+  paymentMethodId String?       @map("payment_method_id")
+  type            String        @default("RENT")
+  status          String        @default("PENDING")
+  amount          Int
+  currency        String        @default("USD")
+  dueDate         DateTime?     @map("due_date")
+  paidAt          DateTime?     @map("paid_at")
+  metadata        String?
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  lease         Lease                @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+  payer         User                 @relation("PaymentPayer", fields: [payerId], references: [id])
+  paymentMethod PaymentMethod?       @relation(fields: [paymentMethodId], references: [id])
+  transactions  PaymentTransaction[]
+  events        PaymentEvent[]
+
+  @@index([leaseId])
+  @@index([payerId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("payments")
+}
+
+model PaymentTransaction {
+  id            String   @id @default(uuid())
+  paymentId     String   @map("payment_id")
+  provider      String
+  providerRef   String?  @map("provider_ref")
+  amount        Int
+  currency      String   @default("USD")
+  success       Boolean  @default(false)
+  rawResponse   String?    @map("raw_response")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  payment Payment        @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  events  PaymentEvent[]
+
+  @@index([paymentId])
+  @@map("payment_transactions")
+}
+
+model PaymentEvent {
+  id            String           @id @default(uuid())
+  paymentId     String           @map("payment_id")
+  transactionId String?          @map("transaction_id")
+  eventType     String           @map("event_type")
+  message       String?
+  metadata      String?
+  createdAt     DateTime         @default(now()) @map("created_at")
+
+  payment     Payment             @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  transaction PaymentTransaction? @relation(fields: [transactionId], references: [id])
+
+  @@index([paymentId])
+  @@index([transactionId])
+  @@map("payment_events")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Ratings & Trust
+// ─────────────────────────────────────────────────────────────
+
+model Rating {
+  id        String   @id @default(uuid())
+  leaseId   String   @map("lease_id")
+  fromId    String   @map("from_id")
+  toId      String   @map("to_id")
+  score     Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lease Lease @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+  from  User  @relation("RatingFrom", fields: [fromId], references: [id])
+  to    User  @relation("RatingTo", fields: [toId], references: [id])
+
+  @@unique([leaseId, fromId, toId])
+  @@index([toId])
+  @@map("ratings")
+}
+
+model TrustEvent {
+  id        String         @id @default(uuid())
+  userId    String         @map("user_id")
+  type      String
+  delta     Int
+  reason    String?
+  metadata  String?
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@map("trust_events")
+}
+
+model TrustScoreHistory {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  oldScore    Int      @map("old_score")
+  newScore    Int      @map("new_score")
+  delta       Int
+  reason      String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("trust_score_history")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Favorites & Maintenance
+// ─────────────────────────────────────────────────────────────
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  propertyId String   @map("property_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+  @@map("favorites")
+}
+
+model MaintenanceRequest {
+  id          String                   @id @default(uuid())
+  propertyId  String                   @map("property_id")
+  requesterId String                   @map("requester_id")
+  title       String
+  description String
+  status      String @default("OPEN")
+  metadata    String?
+  createdAt   DateTime                 @default(now()) @map("created_at")
+  updatedAt   DateTime                 @updatedAt @map("updated_at")
+
+  property  Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  requester User     @relation(fields: [requesterId], references: [id])
+
+  @@index([propertyId])
+  @@map("maintenance_requests")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Disputes
+// ─────────────────────────────────────────────────────────────
+
+model Dispute {
+  id          String        @id @default(uuid())
+  leaseId     String?       @map("lease_id")
+  openerId    String        @map("opener_id")
+  againstId   String        @map("against_id")
+  type        String
+  status      String @default("OPEN")
+  title       String
+  description String
+  resolution  String?
+  metadata    String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  resolvedAt  DateTime?     @map("resolved_at")
+
+  lease    Lease?            @relation(fields: [leaseId], references: [id])
+  opener   User              @relation("DisputeOpener", fields: [openerId], references: [id])
+  against  User              @relation("DisputeAgainst", fields: [againstId], references: [id])
+  evidence DisputeEvidence[]
+
+  @@index([leaseId])
+  @@index([openerId])
+  @@index([againstId])
+  @@index([status])
+  @@map("disputes")
+}
+
+model DisputeEvidence {
+  id         String              @id @default(uuid())
+  disputeId  String              @map("dispute_id")
+  type       String
+  url        String?
+  note       String?
+  metadata   String?
+  createdAt  DateTime            @default(now()) @map("created_at")
+
+  dispute Dispute @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+
+  @@index([disputeId])
+  @@map("dispute_evidence")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Services
+// ─────────────────────────────────────────────────────────────
+
+model ServiceProvider {
+  id          String   @id @default(uuid())
+  name        String
+  type        String
+  contact     String?
+  metadata    String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  propertyServices PropertyService[]
+  serviceRequests  ServiceRequest[]
+
+  @@map("service_providers")
+}
+
+model PropertyService {
+  id                String          @id @default(uuid())
+  propertyId        String          @map("property_id")
+  serviceProviderId String?         @map("service_provider_id")
+  type              String
+  active            Boolean         @default(true)
+  metadata          String?
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  property         Property         @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  serviceProvider  ServiceProvider? @relation(fields: [serviceProviderId], references: [id])
+  serviceRequests  ServiceRequest[]
+
+  @@index([propertyId])
+  @@map("property_services")
+}
+
+model ServiceRequest {
+  id                String               @id @default(uuid())
+  propertyServiceId String               @map("property_service_id")
+  leaseId           String?              @map("lease_id")
+  requesterId       String               @map("requester_id")
+  serviceProviderId String?              @map("service_provider_id")
+  type              String
+  status            String @default("PENDING")
+  title             String
+  description       String?
+  scheduledAt       DateTime?            @map("scheduled_at")
+  completedAt       DateTime?            @map("completed_at")
+  metadata          String?
+  createdAt         DateTime             @default(now()) @map("created_at")
+  updatedAt         DateTime             @updatedAt @map("updated_at")
+
+  propertyService PropertyService  @relation(fields: [propertyServiceId], references: [id])
+  lease           Lease?           @relation(fields: [leaseId], references: [id])
+  requester       User             @relation(fields: [requesterId], references: [id])
+  serviceProvider ServiceProvider? @relation(fields: [serviceProviderId], references: [id])
+
+  @@index([propertyServiceId])
+  @@index([leaseId])
+  @@index([requesterId])
+  @@index([status])
+  @@map("service_requests")
+}
+
+// ─────────────────────────────────────────────────────────────
+// AI
+// ─────────────────────────────────────────────────────────────
+
+model AIPropertyContext {
+  id         String   @id @default(uuid())
+  propertyId String   @unique @map("property_id")
+  context    String
+  metadata   String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("ai_property_context")
+}
+
+model AIConversation {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  propertyId  String?  @map("property_id")
+  leaseId     String?  @map("lease_id")
+  scope       String
+  metadata    String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lease    Lease?      @relation(fields: [leaseId], references: [id])
+  messages AIMessage[]
+
+  @@index([userId])
+  @@index([propertyId])
+  @@index([leaseId])
+  @@map("ai_conversations")
+}
+
+model AIMessage {
+  id              String   @id @default(uuid())
+  conversationId  String   @map("conversation_id")
+  role            String
+  content         String
+  metadata        String?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  conversation AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@map("ai_messages")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Notifications
+// ─────────────────────────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String           @map("user_id")
+  type      String
+  title     String
+  body      String
+  data      String?
+  readAt    DateTime?        @map("read_at")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([readAt])
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Audit
+// ─────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id           String      @id @default(uuid())
+  actorUserId  String?     @map("actor_user_id")
+  entityType   String      @map("entity_type")
+  entityId     String?     @map("entity_id")
+  action       String
+  oldValues    String?       @map("old_values")
+  newValues    String?       @map("new_values")
+  ipAddress    String?     @map("ip_address")
+  userAgent    String?     @map("user_agent")
+  metadata     String?
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [actorUserId], references: [id])
+
+  @@index([actorUserId])
+  @@index([entityType, entityId])
+  @@index([action])
+  @@map("audit_logs")
+}

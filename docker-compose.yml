@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bilo-backend-only
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      API_PREFIX: api/v1
+      DATABASE_URL: file:../data/bilo.sqlite
+      JWT_SECRET: ${JWT_SECRET:-change-me-super-secret-key}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-refresh-secret}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-30d}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-demo-google-client-id}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-demo-google-client-secret}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-http://localhost:3001/api/v1/auth/google/callback}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8088/BILO.html}
+      PAYMENT_PROVIDER: stripe_mock
+      AI_PROVIDER: mock
+      RECOMMENDATION_ENGINE: sqlite
+      AUTO_SEED: ${AUTO_SEED:-true}
+      SEED_MODE: ${SEED_MODE:-live}
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "${BILO_BACKEND_PORT:-3001}:3000"
