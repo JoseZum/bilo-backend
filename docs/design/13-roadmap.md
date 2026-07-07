@@ -6,9 +6,19 @@ criteria (AC)**. Order matters: each epic leaves `main` deployable and demo-able
 
 Sizing: S = ≤1 day, M = 2–3 days, L = ~1 week (for a junior with these docs; halve for a senior).
 
-> **Frontend-driven additions:** doc 14 §4 adds tasks to Epics 3, 4, and 6 (favorites, chat
-> card types, Stripe Connect payouts + landlord dashboard, manual payments, AI lease review).
+> **Frontend-driven additions:** doc 14 §4 adds tasks to Epics 3 and 4 (favorites, chat
+> card types, Stripe Connect payouts + landlord dashboard, manual payments).
 > Treat that list as part of this roadmap.
+>
+> **Business-plan amendments** (see `docs/business/`): **all AI tasks are removed from the
+> launch roadmap** — AI builds only at national scale (business doc 02 §6); `AI_PROVIDER=mock`
+> everywhere until then. The student-niche beachhead (business doc 01 §5) adds to Epic 1:
+> 1.7 university-email student verification (magic code → `STUDENT_VERIFIED` badge, domain
+> allowlist in config) (M); to Epic 2: 2.5 `PropertyType.ROOM` + shared-space amenities (S),
+> 2.6 semester-term presets + availability filters (S); to Epic 3: 3.9 roommate-matching feed
+> filters on the existing `wantsRoommate`/`roommateOk` fields (M). SINPE Móvil gateway adapter
+> moves up from Stage-2 backlog to **Epic 4 stretch / immediately post-launch** — it is the
+> monetization rail for Costa Rica (business doc 02).
 
 ---
 
@@ -73,9 +83,9 @@ evidence uploads + structured resolutions (M; 07 §12). · 5.4 Notification rule
 channel + device-token registry; push channel behind `PUSH_ENABLED` (M; 07 §15). · 5.5 Audit via
 queued writes + PII-redacted diffs + admin query API (M; 07 §16).
 
-## Epic 6 — AI + services + launch hardening
+## Epic 6 — Services + launch hardening (AI removed — deferred to national scale)
 
-6.1 Anthropic adapter + grounding + budgets (M; 07 §14). · 6.2 Services module state machine +
+6.1 ~~Anthropic adapter~~ (deferred; business doc 02 §6). · 6.2 Services module state machine +
 admin onboarding (M; 07 §13). · 6.3 Rate limiting tiers (S; 12 §6). · 6.4 Load test the golden
 path (k6) against staging; fix the top 3 findings (M). · 6.5 Runbooks + restore drill + alert
 wiring (M; 10 §4–6). · 6.6 Security pass: dependency audit, OWASP top-10 checklist, secret scan

@@ -6,6 +6,10 @@ implement it without having to make (or re-litigate) architectural decisions. Ev
 these docs comes with its context, the alternatives we considered, the trade-offs we accepted,
 and the condition under which we would revisit it.
 
+**Business counterpart:** market, monetization, go-to-market, and researched startup lessons
+live in [`docs/business/`](../business/README.md); two of its decisions bind this design — AI is
+deferred to national scale, and the launch niche is Costa Rican university students.
+
 **The prototype in this repo is the input, not the target.** The current code (NestJS + Prisma on
 SQLite, mock providers, mock-login) validated the product flows. These docs describe what we keep,
 what we replace, and in what order.

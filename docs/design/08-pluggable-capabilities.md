@@ -76,7 +76,7 @@ Rules that keep this honest:
 | `DomainEventBus` | `EVENT_BUS` | `emitter` | EventEmitter2 → Transactional Outbox (doc 09) | Emitter: none (in-proc); Outbox: events wait in DB |
 | `PaymentGatewayPort` | `PAYMENT_PROVIDER` | `stripe` (`mock` in dev/test) | Mock → Stripe → +PIX/SPEI/SINPE adapters (S3) | **Never degrade silently** — payment ops fail loudly |
 | `RecommendationEnginePort` | `RECOMMENDATION_ENGINE` | `postgres` | Postgres → Neo4j (S3) | Neo4j down → factory-level fallback to Postgres engine; alert |
-| `AIProvider` | `AI_PROVIDER` | `anthropic` (`mock` in test) | Mock → Anthropic | Graceful "assistant unavailable" response |
+| `AIProvider` | `AI_PROVIDER` | `mock` (AI deferred to national scale — business doc 02 §6) | Mock → Anthropic (late) | Graceful "assistant unavailable" response |
 | `StoragePort` | `STORAGE_DRIVER` | `s3` (`local` in dev) | Local → S3-compatible | Fail loudly (uploads are user-visible) |
 | `NotificationChannelPort[]` | `PUSH_ENABLED`, `EMAIL_ENABLED` | in-app only | InApp → +FCM/APNs, +Email | Channels independent; in-app must succeed |
 | `IdentityProviderPort` (per provider) | — (both always on) | google, apple | — | Provider outage = login for that provider fails; sessions unaffected |
@@ -116,6 +116,6 @@ related — correctness data is read from Postgres, always.
 
 ## 4. What it looks like on launch day of each stage
 
-- **Stage 1:** `CACHE_DRIVER=off QUEUE_DRIVER=inline EVENT_BUS=emitter RECOMMENDATION_ENGINE=postgres PAYMENT_PROVIDER=stripe AI_PROVIDER=anthropic STORAGE_DRIVER=s3`
+- **Stage 1:** `CACHE_DRIVER=off QUEUE_DRIVER=inline EVENT_BUS=emitter RECOMMENDATION_ENGINE=postgres PAYMENT_PROVIDER=stripe AI_PROVIDER=mock STORAGE_DRIVER=s3`
 - **Stage 2 flip:** provision Redis; set `CACHE_DRIVER=redis QUEUE_DRIVER=bullmq EVENT_BUS=outbox`; deploy worker as its own service. Zero code changes if the contract tests were honest.
 - **Stage 3 flip:** provision Neo4j; run the graph backfill job; set `RECOMMENDATION_ENGINE=neo4j`. Flip back instantly if quality/latency regresses — that rollback path is the whole reason the port exists.
