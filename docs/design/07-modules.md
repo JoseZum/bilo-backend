@@ -94,7 +94,11 @@ cross-module call, not an event, because the product promise is "accept and chat
 cursor = created_at+id), `POST /conversations/:id/messages`, `POST /conversations/:id/read`
 (marks read up to timestamp).
 **Emits.** `message.sent` (notifications listens: push to the other party).
-**Rules & decisions.** REST polling at Stage 1 (mobile polls the list screen; acceptable to
+**Rules & decisions.** `message_type` enum: `TEXT | CONTRACT_PROPOSAL | PAYMENT_REQUEST |
+SYSTEM` — the non-text types are structured cards whose payload lives in `messages.metadata`
+and links the real domain object (draft lease id / payment id); see doc 14 §1. The list DTO
+returns `unreadCount`, `lastMessage`, and the other participant per row (lateral join, not N+1).
+REST polling at Stage 1 (mobile polls the list screen; acceptable to
 ~50k users). Stage 2: same module gains a WebSocket gateway (`@nestjs/websockets`, Redis
 pub/sub adapter for multi-instance fan-out) — **message persistence path is identical**; the
 socket is a delivery optimization, so no API break. Message bodies are PII: scrubbed on account
@@ -176,6 +180,10 @@ off-session via the same sequence; failure → `payment.failed` → notification
 **Reconciliation:** nightly job compares yesterday's Stripe balance transactions against our
 ledger by `provider_ref`; any orphan on either side pages a human. This is the "never lie about
 money" enforcement.
+**Payouts & manual payments:** bilo is a marketplace, not a pass-through — Stripe Connect
+destination charges, a `payouts` table we own, landlord KYC before lease activation, the
+landlord dashboard aggregate endpoint, and manual-payment recording (`PAID` with
+`method_type=MANUAL`) are specified in doc 14 §3.
 
 ## 10. trust (Ring 0, global)
 

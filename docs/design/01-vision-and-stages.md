@@ -16,6 +16,10 @@ is:
   disputes generalize to any recurring rental (vehicles, equipment, storage). Housing-specific
   fields live in the Property module and in `metadata` JSONB, not in the lease/payment core.
 
+**Launch market: Costa Rica** (established by the frontend prototype — CRC amounts, SINPE Móvil,
+San José zones; see doc 14). Default currency is `CRC`; Stripe cards are the first rail, SINPE
+Móvil is the first post-Stripe gateway adapter. Multi-country is Stage 3.
+
 ## 2. Where the money comes from
 
 Engineering needs to know the revenue model because it dictates what must never break:
