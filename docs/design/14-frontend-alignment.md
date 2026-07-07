@@ -49,6 +49,12 @@ Contract notes:
 The admin screen promises "próximo payout: 24 may · ₡2,730,000". That means bilo **receives
 tenant money and pays landlords out** — marketplace money flow, not pass-through.
 
+> **Amended by business doc 05 §1:** Stripe is unavailable to CR entities and pooled funds
+> require licensing — everything below describes **Phase B**. In Phase A (pilot/launch) rent
+> moves tenant→landlord directly via SINPE, bilo verifies/records, and the dashboard's payout
+> figures are replaced by "verified received" figures. The `payouts` table and Connect
+> onboarding build only when Phase B starts.
+
 **Decision.** Stripe Connect (Express accounts) at Stage 1 for card rails: charges use
 `transfer_data`/destination charges so Stripe holds and routes funds; our `platform_fee_minor`
 becomes the application fee. New table `payouts (id, landlord_id, amount_minor, currency,

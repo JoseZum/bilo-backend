@@ -64,6 +64,14 @@ caching via `getOrSet` (works as noop today) (S; 08 §3).
 
 ## Epic 4 — The rail (leases + payments) — the senior-attention epic
 
+> **Amended by business doc 05 (legal):** launch is **Phase A** — direct tenant→landlord SINPE
+> with bilo verification; no charging gateway, no pooled funds. Tasks 4.3–4.6 (Stripe adapter,
+> charge sequence, webhooks, payment methods) become **Phase B, build-on-trigger**; in their
+> place: 4.3a `DirectSinpeVerificationAdapter` + payment verification/confirmation flow (M),
+> 4.4a `InvoicingPort` + e-invoice on fee charges (M), and the doc 14 §4 manual-payment task
+> absorbs into 4.3a. The ledger, state machine, `RentSchedule`, jobs, and reconciliation tasks
+> (4.1, 4.2, 4.7, 4.8) are **unchanged** — they are rail-agnostic by design.
+
 | # | Task | Size | Spec | AC |
 |---|---|---|---|---|
 | 4.1 | `LeaseStateMachine` + `RentSchedule` (pure, exhaustively unit-tested: dueDay 28–31, leap, proration) | M | 07 §8 | Transition table 100% covered; proration formula property-tested |

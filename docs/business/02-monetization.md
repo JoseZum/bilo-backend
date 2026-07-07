@@ -21,6 +21,10 @@ marketplace is free-to-list), featured-listing pay-to-win in the feed (corrupts 
 positioning that differentiates us), selling user data (kills the trust brand, GDPR-shaped
 liability).
 
+> **Mechanics amendment (doc 05 §1, legal):** in Phase A, R1/R2 fees are **billed via
+> e-invoice and charged as bilo receivables**, never deducted from rent flows — bilo does not
+> touch rent money until Phase B licensing/partnership. Percentages and phases are unchanged.
+
 ## 2. Why this shape survives the known killers
 
 - **Interchange death (RadPad):** RadPad moved rent on card rails, subsidized promos it

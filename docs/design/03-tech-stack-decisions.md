@@ -139,13 +139,21 @@ mention — Postgres-backed queue; we keep it as the fallback if we want queues 
 
 ---
 
-## ADR-09: Payments — Stripe first, behind PaymentGatewayPort
+## ADR-09: Payments — phased rail behind PaymentGatewayPort (amended by business doc 05)
 
-**Decision.** Stripe (cards, off-session charges for recurring rent) as the first real adapter of
-the prototype's existing `PAYMENT_PROVIDER` port. **bilo's ledger is ours**: Stripe is a money
-mover, our `payments/payment_transactions/payment_events` tables are the source of truth for
-"who owes what" (doc 07 §Payments). LATAM-specific rails (SINPE, SPEI, PIX) become additional
-adapters at Stage 3 — the port's `Charge/Refund/Webhook` shape is designed for that.
+**Amendment (legal research, business doc 05 §1).** Stripe does not serve Costa Rican entities,
+and holding third-party funds in CR is licensed activity. Therefore:
+- **Phase A (pilot/launch):** tenant pays landlord **directly via SINPE**; bilo verifies and
+  records. The port binds a `DirectSinpeVerificationAdapter` (verify/record, no charging);
+  bilo's fees are billed separately via e-invoice (`InvoicingPort`, new).
+- **Phase B (scale):** licensed local PSP partnership (and/or US entity + Stripe for
+  international students) enables true collect-and-disburse, cards, and payouts.
+
+**Unchanged:** **bilo's ledger is ours** — `payments/payment_transactions/payment_events` are
+the source of truth for "who owes what" regardless of who moves the money; the state machine,
+idempotency, and reconciliation design (doc 07 §9) apply to verification exactly as to charging.
+The port's `Charge/Refund/Webhook` shape remains the Phase-B contract; SPEI/PIX-class adapters
+remain the Stage-3 expansion path.
 
 ---
 
