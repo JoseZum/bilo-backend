@@ -92,8 +92,10 @@ Two layers, deliberately simple:
 
 1. **Role gate (coarse):** `TENANT | LANDLORD | ADMIN` via `@Roles()` on controllers.
    A user's role is on the JWT; role changes (tenant becomes landlord too) re-issue tokens.
-   Note: role is not exclusive in the domain — a landlord can rent as a tenant. `role` on the
-   user is the *primary* role; capability checks below are what actually protect resources.
+   Note: role is not exclusive in the domain — a landlord can rent as a tenant, and the
+   frontend toggles between the two views constantly (doc 14 §1). `role` on the user is the
+   *primary* role; role-scoped list endpoints accept `?as=tenant|landlord` for the acting
+   view, and capability checks below are what actually protect resources.
 2. **Ownership/participation policies (fine):** pure policy classes per module, called first
    thing in every application-service method that touches a resource:
 

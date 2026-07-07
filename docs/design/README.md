@@ -29,6 +29,7 @@ Read in order the first time. After that, each doc stands alone.
 | 11 | [Testing Strategy](./11-testing-strategy.md) | What we test, at which layer, and the CI gate |
 | 12 | [API Conventions](./12-api-conventions.md) | Versioning, pagination, error envelope, idempotency, rate limiting |
 | 13 | [Implementation Roadmap](./13-roadmap.md) | The build order: epics, tasks, and acceptance criteria a junior can execute |
+| 14 | [Frontend Alignment](./14-frontend-alignment.md) | What the bilo-frontend prototype pins down: launch market, wire contract, payouts, chat cards, AI lease review |
 
 ## Design principles (the short version)
 

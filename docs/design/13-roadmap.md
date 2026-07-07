@@ -6,6 +6,10 @@ criteria (AC)**. Order matters: each epic leaves `main` deployable and demo-able
 
 Sizing: S = ≤1 day, M = 2–3 days, L = ~1 week (for a junior with these docs; halve for a senior).
 
+> **Frontend-driven additions:** doc 14 §4 adds tasks to Epics 3, 4, and 6 (favorites, chat
+> card types, Stripe Connect payouts + landlord dashboard, manual payments, AI lease review).
+> Treat that list as part of this roadmap.
+
 ---
 
 ## Epic 0 — Foundations (everything else stands on this)
