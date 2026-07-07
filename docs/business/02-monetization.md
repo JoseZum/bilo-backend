@@ -9,8 +9,8 @@ below is phased: what is free, what earns, and when each stream switches on.
 
 | # | Stream | Mechanics | Benchmark evidence | Phase |
 |---|---|---|---|---|
-| R1 | **Booking fee** (one-time, at lease signing) | % of one month's rent, split tenant/landlord — Uniplaces charges ~8% split 4/4; commission only on *confirmed booking*, never on enquiry ([Uniplaces model](https://vizologi.com/business-strategy-canvas/uniplaces-business-model-canvas/), [marketplace comparison](https://www.onlinemarketplaces.com/articles/spotahome-vs-housing-anywhere-vs-uniplaces/)) | bilo pilot: **6%, split 3% + 3%** | P1 |
-| R2 | **Rent rail take rate** (recurring) | Fee per on-platform rent payment. SINPE cost ≈ 0 makes low % viable where card-based rails die on ~2–2.4% interchange ([interchange data](https://www.fool.com/money/research/average-credit-card-processing-fees-costs-america/), [take-rate benchmarks](https://www.tidemarkcap.com/vskp-chapter/marketplace-take-rates)) | **1.5% landlord-side** on SINPE; card payments pass processing cost + 1.5% | P2 |
+| R1 | **Booking fee** (one-time, **collected up-front, service-gated**) | Paid **to bilo's own account** (our money — no license issue, and we *can* see our own account) **before** the lease contract, verification exchange, and deposit record are issued. Sized as a **broker-fee (corretaje) replacement**, not a token: 25–40% of one month's rent, split evenly — still less than half a traditional broker's month, with verification + contract + trust layer included. Commission only on confirmed lease, never on enquiry ([Uniplaces model](https://vizologi.com/business-strategy-canvas/uniplaces-business-model-canvas/), [marketplace comparison](https://www.onlinemarketplaces.com/articles/spotahome-vs-housing-anywhere-vs-uniplaces/)) | Pilot: **30% of one month, split 15% + 15%** (willingness measured, doc 03 §4) | P1 |
+| R2 | **Cobro Automático** (recurring, **deducted at source via licensed PSP**) | Tenant pays through a PSP-powered SINPE link/recurring charge; the licensed PSP (ONVO-class: SINPE at 1.5%, API + webhooks — [ONVO](https://onvopay.com/), [fee comparison](https://pymesmodernas.com/comisiones-tilopay-costa-rica/)) settles **directly to the landlord** and webhooks give bilo ground truth. Priced at **2.5% all-in landlord-side** (PSP cost inside) *or* flat ₡4,900/lease/month — landlord picks. The free alternative (manual SINPE + attestation) always exists; auto-mode sells itself on zero-chasing collection | Landlords choose mode; no goodwill invoices anywhere | P2 (PSP partnership permitting — doc 05 L7 is now P1 priority) |
 | R3 | **Deposit protection / guarantee** | bilo escrows deposit + arbitrates via disputes module; fee ~5% of deposit or flat | Airbnb's guarantee is the canonical trust-monetization ([Airbnb case study](https://www.cobbleweb.co.uk/airbnb-case-study/)) | P2 |
 | R4 | **Landlord Pro subscription** | Multi-property dashboard, analytics, priority placement, export — SaaS-priced (₡8–15k/month) | Vertical SaaS <1% GMV take rate but high margin ([Tidemark](https://www.tidemarkcap.com/vskp-chapter/marketplace-take-rates)) | P3 |
 | R5 | **Value-added services** | Cleaning/moving/insurance via services module, commission per job | Standard attach model | P3 |
@@ -21,15 +21,20 @@ marketplace is free-to-list), featured-listing pay-to-win in the feed (corrupts 
 positioning that differentiates us), selling user data (kills the trust brand, GDPR-shaped
 liability).
 
-> **Mechanics amendment (doc 05 §1, legal):** in Phase A, R1/R2 fees are **billed via
-> e-invoice and charged as bilo receivables**, never deducted from rent flows — bilo does not
-> touch rent money until Phase B licensing/partnership. Percentages and phases are unchanged.
+> **Collection doctrine (the fix for "we can't intercept SINPE"):** bilo never bills a fee it
+> must chase. Every revenue stream is either (a) **collected up-front into bilo's own account
+> and service-gated** (R1: no fee, no contract issuance — and watching our *own* account needs
+> no license), (b) **deducted at source by a licensed PSP partner** (R2 auto-mode), or
+> (c) **a subscription whose service switches off on non-payment** (R4). Invoice-and-hope
+> revenue is banned from the model. E-invoices are still issued for every fee (doc 05 §3) —
+> as receipts, not as collection instruments.
 
 ## 2. Why this shape survives the known killers
 
 - **Interchange death (RadPad):** RadPad moved rent on card rails, subsidized promos it
-  couldn't exit, and died with ~2%+ COGS per transaction ([RadPad postmortem](https://www.doctorofcredit.com/radpad-deal-shut-early-explanation-ceo/), [Wikipedia](https://en.wikipedia.org/wiki/RadPad)). bilo's CR rail is SINPE
-  (≈ free under ₡100k/day, cents above — [BCCR](https://www.bccr.fi.cr/en/payments-system/sinpe-fees-and-charges)); R2's 1.5% is nearly all gross margin, and card
+  couldn't exit, and died with ~2%+ COGS per transaction ([RadPad postmortem](https://www.doctorofcredit.com/radpad-deal-shut-early-explanation-ceo/), [Wikipedia](https://en.wikipedia.org/wiki/RadPad)). bilo's margins survive by construction: R1 rides
+  raw SINPE into our own account (≈ free — [BCCR](https://www.bccr.fi.cr/en/payments-system/sinpe-fees-and-charges)); R2 auto-mode is priced *above* its PSP cost
+  (2.5% price vs 1.5% COGS) and the manual mode costs us nothing; card
   users pay their own processing. **Rule: no payment method ships whose fully-loaded cost
   exceeds its fee revenue.**
 - **Leakage (Homejoy, every rental platform):** rent is a *recurring* relationship — the
@@ -46,18 +51,25 @@ liability).
 
 ## 3. Unit economics (planning numbers, CR student beachhead)
 
-Assumptions to validate: avg student rent ₡220,000 (~$430); avg lease 10 months; booking fee 6%;
-rail take 1.5% from P2.
+Assumptions to validate: avg student rent ₡220,000 (~$430); avg lease 10 months; booking fee
+30% of one month split 15/15; auto-mode adoption 50% of on-rail leases at 2.5% (1.5% PSP COGS
+inside); flat-subscription adopters equivalent.
 
-- **Per lease:** R1 = ₡13,200 (~$26) once + R2 = ₡3,300/month × 10 ≈ ₡33,000 (~$65) → **≈ $91
-  revenue per lease-year**, at near-zero marginal COGS on SINPE.
-- **Campus at maturity** (UCR-scale, target 1,500 active on-rail leases): ≈ $135k ARR/campus.
+- **Per lease:** R1 = ₡66,000 (~$130) once, up-front, gated + R2 (auto-mode net ≈ ₡2,200/month
+  × 10, on half the base) ≈ ₡11,000 (~$22) blended → **≈ $150 net revenue per lease-year** —
+  up from $91 in the pre-restructure model, with *every* colón either prepaid or
+  PSP-deducted, none invoiced-and-chased.
+- **Campus at maturity** (UCR-scale, target 1,500 active on-rail leases): ≈ $225k ARR/campus.
 - **CR at maturity** (5 campus zones + general SJ young-professional expansion, ~10k on-rail
-  leases): ≈ **$0.9–1.2M ARR** — the "million-dollar year" is a *Costa Rica alone, no AI, no
+  leases): ≈ **$1.5M+ ARR** — the "million-dollar year" is a *Costa Rica alone, no AI, no
   magic* outcome; regional expansion multiplies it.
-- Break-even sanity: a 4-person team + infra (~$25–35k/month CR cost base) needs ~3,500–4,500
-  on-rail leases → roughly wave 1–3 campuses at target liquidity. That is the real gate for
-  raising or bootstrapping decisions.
+- Break-even sanity: a 4-person team + infra (~$25–35k/month CR cost base) needs ~2,000–2,800
+  active leases/year flowing through R1+R2 → roughly wave 1–2 campuses at target liquidity.
+  That is the real gate for raising or bootstrapping decisions.
+- **The #1 willingness test moves to R1:** ₡33k per side (vs. a broker's full month, vs. free-
+  but-scammy Facebook) is the pilot's most important measured number (doc 03 §4). If it
+  measures low, the levers are size (25%), timing (half at match, half at signing), and side
+  weighting (landlord-heavier) — not retreat to invoice-after revenue.
 
 These are model inputs, not promises — the pilot's job (doc 03 §4) is to replace every
 assumption with a measured number within two semesters.

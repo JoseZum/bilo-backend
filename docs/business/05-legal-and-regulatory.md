@@ -35,10 +35,17 @@ for "entidades de recepción de pago" has been under discussion
   score, receipts, and dashboard all run on *verified* payments. bilo's own fees (booking fee,
   rail fee) are **billed separately** to the landlord/tenant via e-invoice and charged as an
   ordinary bilo receivable — we are a software + verification company, not a funds intermediary.
-- **Phase B (scale):** partner with a licensed local PSP (or become a registered payment
-  receiver if the regime materializes) for true collect-and-disburse, card support via local
-  PSP and/or a US entity + Stripe for international/exchange students. This is when design
-  doc 14 §3's payouts table becomes operative.
+- **Phase B (available on demand, not "someday"):** licensed local PSPs already offer
+  **automated SINPE collection with APIs and webhooks** — ONVO Pay (SINPE 1.5%/tx, REST API,
+  recurring) and Tilopay (SINPE 2% + $0.35) ([ONVO](https://onvopay.com/),
+  [Tilopay](https://www.tilopay.com/), [fees](https://pymesmodernas.com/comisiones-tilopay-costa-rica/)).
+  This is what powers R2 "Cobro Automático" (doc 02): tenant pays via PSP, PSP settles, bilo
+  gets the webhook. **Hard requirement to verify in the partnership (L7): settlement must go
+  directly to the landlord** (landlord as merchant/beneficiary, bilo as platform integrator) —
+  if the PSP can only liquidate to bilo, pooled-funds exposure returns and that structure is
+  rejected. Cards for international students come later via local PSP card rails and/or a US
+  entity + Stripe. Design doc 14 §3's payouts table becomes operative only if a
+  bilo-as-recipient structure is ever licensed.
 - **Engineering consequence:** `PaymentGatewayPort` is unchanged (this is exactly why it's a
   port); Phase A binds a `DirectSinpeVerificationAdapter` instead of a charging gateway.
   Design docs ADR-09 and 14 §3 carry amendment notes pointing here.
@@ -105,4 +112,4 @@ and retention periods for ledger/audit data.
 | L4 | ToS + Privacy + Prodhab assessment | Public launch | P1 |
 | L5 | Lease templates (both regimes) + deposit terms | First lease | **P0** |
 | L6 | IVA treatment of each revenue stream + e-invoicing provider selection | P1 monetization | P1 |
-| L7 | Phase B licensing/PSP-partnership memo | P2 | P2 |
+| L7 | PSP partnership review (ONVO/Tilopay-class): direct-to-landlord settlement structure, contract terms, volume pricing | R2 monetization | **P1** (promoted — R2 depends on it) |

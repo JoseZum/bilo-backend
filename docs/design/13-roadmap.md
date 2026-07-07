@@ -71,6 +71,14 @@ caching via `getOrSet` (works as noop today) (S; 08 §3).
 > 4.4a `InvoicingPort` + e-invoice on fee charges (M), and the doc 14 §4 manual-payment task
 > absorbs into 4.3a. The ledger, state machine, `RentSchedule`, jobs, and reconciliation tasks
 > (4.1, 4.2, 4.7, 4.8) are **unchanged** — they are rail-agnostic by design.
+>
+> **Note (business doc 02 restructure):** the first *charging* adapter is now expected to be a
+> **CR PSP (ONVO/Tilopay-class) SINPE adapter** powering "Cobro Automático" (R2) — likely
+> pilot-adjacent, not distant Phase B — plus a small **fee-collection flow** for the booking
+> fee (R1): SINPE into bilo's own account, gate lease-contract issuance on confirmed receipt.
+> Both fit the existing `PaymentGatewayPort` (webhook-driven, like the Stripe design).
+> Task 4.5's webhook infrastructure (signature verify, `webhook_events` dedup, fast-ack)
+> builds as designed — the provider is the PSP instead of Stripe.
 
 | # | Task | Size | Spec | AC |
 |---|---|---|---|---|
