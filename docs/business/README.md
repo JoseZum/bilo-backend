@@ -11,6 +11,12 @@ assumption to validate, or an explicit decision with trade-offs.
 | 02 | [Monetization](./02-monetization.md) | Every revenue stream, take-rate math, unit economics per phase, what stays free and why |
 | 03 | [Go-To-Market](./03-go-to-market.md) | The campus-by-campus launch playbook, marketing channels, liquidity metrics, expansion gates |
 | 04 | [Lessons: Winners & Dead Startups](./04-lessons-winners-and-dead.md) | Researched case studies (Airbnb, Uber, Uniplaces, RadPad, Homejoy, HubHaus, Campus…) and the specific bilo decision each one drives |
+| 05 | [Legal & Regulatory (CR)](./05-legal-and-regulatory.md) | The two plan-changing findings (no Stripe in CR; funds-holding is licensed activity), Ley 7527 product consequences, tax/e-invoicing, the counsel engagement brief |
+| 06 | [Product & Pilot MVP](./06-product-and-mvp.md) | Personas, the two golden journeys, the ruthless pilot feature cut, PWA-first mobile decision |
+| 07 | [Trust, Safety & Support](./07-trust-safety-and-support.md) | Verification ladder, fraud playbook, visit safety, dispute SLAs, WhatsApp-first support ops |
+| 08 | [Finance, Runway & Team](./08-finance-runway-and-team.md) | Burn by phase, runway scenarios, fundraising-to-gates mapping, hiring order, discipline rules |
+| 09 | [Metrics & Analytics](./09-metrics-and-analytics.md) | North star, the KPI tree behind every gate, event tracking plan, operating cadence |
+| 10 | [Risk Register](./10-risk-register.md) | Every known risk with mitigation, trigger→response, and owner — reviewed weekly |
 
 ## The strategy in one paragraph
 
