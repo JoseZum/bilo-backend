@@ -76,8 +76,10 @@ assumed).
   3.8 message card types CONTRACT_PROPOSAL / PAYMENT_REQUEST / SYSTEM (M).
 - Epic 4 gains: 4.9 Stripe Connect onboarding + payouts table + activation guard (L) ·
   4.10 landlord dashboard aggregate endpoint (M) · 4.11 manual payment recording (S).
-- Epic 6 gains: 6.7 lease clause review (async AI job + flags storage) (M) · 6.8 rule-based
-  inline chat insights (S).
+- ~~Epic 6 gains: lease clause review + inline chat insights~~ — **superseded**: all AI
+  features are deferred to national scale (business doc 02 §6). The rule-based inline chat
+  insights (trust/rating facts, no LLM) may ship earlier since they don't touch the AI module —
+  product's call, not launch-blocking.
 - Stage-2 backlog gains: SINPE Móvil gateway adapter + bilo-initiated payouts.
 
 Everything else the frontend shows (onboarding, publish flow, requests inbox, profile,

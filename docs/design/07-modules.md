@@ -223,9 +223,11 @@ via admin endpoints. Monetization hook: `service_requests` gets `payment_id` (nu
 completed request can be charged through the same payment rail later — do not build until
 product asks.
 
-## 14. ai (Ring 3)
+## 14. ai (Ring 3) — **DEFERRED: builds only at national scale** (business docs README, 02 §6)
 
-**Purpose.** Property Q&A for tenants; listing copy assist for landlords.
+**Purpose.** Property Q&A for tenants; listing copy assist for landlords. Spec kept so the seam
+and scope are settled; nothing here is in the launch roadmap, and `AI_PROVIDER=mock` until the
+deferral lifts.
 **Owns.** `ai_property_context`, `ai_conversations`, `ai_messages`.
 **API.** `POST /ai/property/:id/ask`, `PUT /ai/property/:id/context` (landlord),
 `POST /ai/listing-draft` (landlord).

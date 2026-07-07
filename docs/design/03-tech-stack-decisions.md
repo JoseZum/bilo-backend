@@ -149,13 +149,14 @@ adapters at Stage 3 — the port's `Charge/Refund/Webhook` shape is designed for
 
 ---
 
-## ADR-10: AI — Anthropic Claude behind AIProvider port
+## ADR-10: AI — Anthropic Claude behind AIProvider port, **deferred to very late stage**
 
-**Decision.** Replace `MockAIProvider` with a Claude adapter (property Q&A, listing-description
-generation). `AI_PROVIDER=mock|anthropic`. The mock stays forever — it's what tests and local dev
-use. AI answers are grounded in the property's `AIPropertyContext` (existing design) and clearly
-scoped: the AI module has **read-only** access via other modules' services and can never mutate
-domain state.
+**Decision (amended per business plan).** AI features ship **post-national-scale only**
+(business docs README + 02 §6). The `AIProvider` port and module spec stay in the design
+(doc 07 §14) so the seam exists, but `AI_PROVIDER=mock` is the default at every launch stage
+and **no AI tasks are in the launch roadmap**. When enabled, the adapter is Anthropic Claude
+(property Q&A, listing copy, lease clause review), grounded in `AIPropertyContext`, read-only
+over domain state.
 
 ---
 
@@ -188,6 +189,6 @@ platforms require/privilege these providers anyway.
 | Events | EventEmitter2 after-commit | `EVENT_BUS` | Outbox (S2) |
 | Payments | Stripe | `PAYMENT_PROVIDER` | +LATAM rails (S3) |
 | Recommendations | Postgres SQL | `RECOMMENDATION_ENGINE` | Neo4j (S3) |
-| AI | Anthropic / mock | `AI_PROVIDER` | same |
+| AI | mock (deferred — business doc 02 §6) | `AI_PROVIDER` | Anthropic at national scale |
 | Storage | S3 / local | `STORAGE_DRIVER` | same |
 | Search | Postgres FTS + PostGIS | — | OpenSearch (S3, if measured) |
