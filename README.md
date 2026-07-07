@@ -2,6 +2,10 @@
 
 Backend NestJS + PostgreSQL + Prisma para bilo — plataforma de alquiler residencial tipo "Tinder + Airbnb + trust layer" para LATAM.
 
+> **📐 Production backend design:** este repo es el prototipo. El diseño completo del backend
+> de producción (arquitectura, decisiones, trade-offs, patrones, módulos, roadmap) vive en
+> [`docs/design/`](./docs/design/README.md). Leer eso antes de escribir código nuevo.
+
 ## Stack
 
 - Node.js 20 + TypeScript
