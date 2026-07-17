@@ -112,4 +112,4 @@ and retention periods for ledger/audit data.
 | L4 | ToS + Privacy + Prodhab assessment | Public launch | P1 |
 | L5 | Lease templates (both regimes) + deposit terms | First lease | **P0** |
 | L6 | IVA treatment of each revenue stream + e-invoicing provider selection | P1 monetization | P1 |
-| L7 | PSP partnership review (ONVO/Tilopay-class): direct-to-landlord settlement structure, contract terms, volume pricing | R2 monetization | **P1** (promoted — R2 depends on it) |
+| L7 | PSP partnership review (ONVO/Tilopay-class): direct-to-landlord settlement structure, **split-settlement capability** (rent→landlord + fee→bilo in one transaction), contract terms, volume pricing | R2 monetization | **P1** (promoted — R2 depends on it) |
