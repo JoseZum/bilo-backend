@@ -9,7 +9,7 @@ below is phased: what is free, what earns, and when each stream switches on.
 
 | # | Stream | Mechanics | Benchmark evidence | Phase |
 |---|---|---|---|---|
-| R1 | **Booking fee** (one-time, **collected up-front, service-gated**) | Paid **to bilo's own account** (our money — no license issue, and we *can* see our own account) **before** the lease contract, verification exchange, and deposit record are issued. Sized as a **broker-fee (corretaje) replacement**, not a token: 25–40% of one month's rent, split evenly — still less than half a traditional broker's month, with verification + contract + trust layer included. Commission only on confirmed lease, never on enquiry ([Uniplaces model](https://vizologi.com/business-strategy-canvas/uniplaces-business-model-canvas/), [marketplace comparison](https://www.onlinemarketplaces.com/articles/spotahome-vs-housing-anywhere-vs-uniplaces/)) | Pilot: **30% of one month, split 15% + 15%** (willingness measured, doc 03 §4) | P1 |
+| R1 | **Booking fee** (one-time, **rides existing money moments, service-gated**) | Paid **to bilo's own account** (our money — no license issue, and we *can* see our own account). Timing per the friction doctrine below: **tenant share at signing** (alongside deposit + first month, gates contract issuance); **landlord share due on first-rent confirmation** (they pay from received money; non-payment switches off services, not the lease). Sized as a **broker-fee (corretaje) replacement**, not a token: 25–40% of one month's rent, split evenly — still less than half a traditional broker's month, with verification + contract + trust layer included. Commission only on confirmed lease, never on enquiry ([Uniplaces model](https://vizologi.com/business-strategy-canvas/uniplaces-business-model-canvas/), [marketplace comparison](https://www.onlinemarketplaces.com/articles/spotahome-vs-housing-anywhere-vs-uniplaces/)) | Pilot: **30% of one month, split 15% + 15%** (willingness measured, doc 03 §4) | P1 |
 | R2 | **Cobro Automático** (recurring, **deducted at source via licensed PSP**) | Tenant pays through a PSP-powered SINPE link/recurring charge; the licensed PSP (ONVO-class: SINPE at 1.5%, API + webhooks — [ONVO](https://onvopay.com/), [fee comparison](https://pymesmodernas.com/comisiones-tilopay-costa-rica/)) settles **directly to the landlord** and webhooks give bilo ground truth. Priced at **2.5% all-in landlord-side** (PSP cost inside) *or* flat ₡4,900/lease/month — landlord picks. The free alternative (manual SINPE + attestation) always exists; auto-mode sells itself on zero-chasing collection | Landlords choose mode; no goodwill invoices anywhere | P2 (PSP partnership permitting — doc 05 L7 is now P1 priority) |
 | R3 | **Deposit protection / guarantee** | bilo escrows deposit + arbitrates via disputes module; fee ~5% of deposit or flat | Airbnb's guarantee is the canonical trust-monetization ([Airbnb case study](https://www.cobbleweb.co.uk/airbnb-case-study/)) | P2 |
 | R4 | **Landlord Pro subscription** | Multi-property dashboard, analytics, priority placement, export — SaaS-priced (₡8–15k/month) | Vertical SaaS <1% GMV take rate but high margin ([Tidemark](https://www.tidemarkcap.com/vskp-chapter/marketplace-take-rates)) | P3 |
@@ -28,6 +28,16 @@ liability).
 > (c) **a subscription whose service switches off on non-payment** (R4). Invoice-and-hope
 > revenue is banned from the model. E-invoices are still issued for every fee (doc 05 §3) —
 > as receipts, not as collection instruments.
+>
+> **Friction doctrine (the Uber lesson):** a fee must never be a standalone payment event —
+> it always rides a money moment that already exists. Tenant booking fee: **at signing,
+> alongside deposit + first month** (one moment, one more line). Landlord booking fee: **due
+> only after first rent is confirmed received** ("le cobramos cuando usted ya cobró"),
+> service-gated thereafter. Monthly: **exactly one payment ever** — manual mode is the rent
+> SINPE alone (no monthly fee); auto-mode is one PSP payment whose **split settlement** routes
+> rent to the landlord and fee to bilo in the same transaction. If the chosen PSP cannot split
+> (verify in doc 05 L7), auto-mode monetizes via prepaid flat subscription instead — never via
+> a second monthly payment act.
 
 ## 2. Why this shape survives the known killers
 
