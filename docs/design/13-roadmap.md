@@ -6,6 +6,14 @@ criteria (AC)**. Order matters: each epic leaves `main` deployable and demo-able
 
 Sizing: S = ≤1 day, M = 2–3 days, L = ~1 week (for a junior with these docs; halve for a senior).
 
+> **Bootstrap sequencing (business doc 11):** the epics below describe the full Stage-1
+> production build; the bootstrap plan releases them in gated slices. **Milestone 1**
+> (app-store marketplace launch, no revenue) ships Epics 0–3 + the doc 20 geo tasks + student
+> verification (1.7) — explicitly *without* Epic 4 (leases/payments), cédula verification, or
+> the Epic 7 wave. **Milestone 2** (S.R.L. + Hacienda) unlocks fee/subscription billing
+> (structure B, business doc 12 §3); the rent rail and lease tasks stay behind their legal
+> triggers (ERS §5.1 release-gate table).
+>
 > **Frontend-driven additions:** doc 14 §4 adds tasks to Epics 3 and 4 (favorites, chat
 > card types, Stripe Connect payouts + landlord dashboard, manual payments).
 > Treat that list as part of this roadmap.
@@ -60,7 +68,13 @@ idempotent event listeners (S; 07 §4).
 weights from config; per-response score log; excludes swiped/own/inactive. · 3.2 Swipes with
 upsert-grace + events (S). · 3.3 Matches + state machine + same-tx conversation creation (M;
 07 §6). · 3.4 Chat endpoints with cursor pagination + read markers (M; 07 §7). · 3.5 Feed
-caching via `getOrSet` (works as noop today) (S; 08 §3).
+caching via `getOrSet` (works as noop today) (S; 08 §3). · 3.6 Anchor+radius feed params over
+PostGIS (`anchorLat/anchorLng/radiusM`, clamps, `distanceM` in results) (M; 20 §1) — AC:
+within-radius + distance-order integration test. · 3.7 geo module: POI table + `poi.refresh`
+Overpass import + typeahead + admin curation; `UNIVERSITY` seeded and alias-curated (L; 20
+§3–5) — AC: import idempotent; "TEC" resolves; curated fields survive refresh. · 3.8 Real map
+in filter sheet: MapLibre + OSM tiles + attribution, draggable pin, resizable circle, POI
+markers/search, "buscar en esta zona" (L; 20 §2,5).
 
 ## Epic 4 — The rail (leases + payments) — the senior-attention epic
 

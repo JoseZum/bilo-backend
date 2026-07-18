@@ -90,6 +90,7 @@ on failure.**
 | `maintenance.visit-reminders` | every 15 min | 24 h / 1 h visit reminders (`reminder*SentAt` set in same tx; doc 19 §6) |
 | `maintenance.auto-close` | daily | RESOLVED >7 d without tenant action → CLOSED, day-5 warning (doc 19 §6) |
 | `maintenance.sla-nudge` | hourly | REPORTED past first-response target → nudge landlord (`sla_nudged_at` dedup; doc 19 §6) |
+| `poi.refresh` | weekly per region | Overpass import per enabled POI category; upsert by `(osm_type, osm_id)`, curated fields never clobbered (doc 20 §3) |
 
 Jobs are plain classes (`@Injectable() RentGenerateJob { run(ctx) }`) registered with the
 scheduler — testable by calling `run()` with a fixed Clock, no cron in tests.

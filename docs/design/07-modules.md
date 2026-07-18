@@ -72,6 +72,8 @@ into a graph projection and does collaborative filtering; same port, same API.
 updates the action (upsert) within a small grace window, else 409. Feed excludes own properties.
 Feed responses are cacheable per-user for minutes (`CachePort`, doc 08) — invalidated lazily,
 not precisely; staleness of a feed is harmless.
+**Amended by doc 20:** the feed accepts optional `anchorLat/anchorLng/radiusM` (POI- or
+pin-anchored search); results carry `distanceM` from the anchor.
 
 ## 6. matches (Ring 3)
 
@@ -228,7 +230,7 @@ Marketplace for property services (cleaning, plumbing). Prototype model kept
 via admin endpoints. Monetization hook: `service_requests` gets `payment_id` (nullable) so a
 completed request can be charged through the same payment rail later — do not build until
 product asks. Tenancy repair workflows are **not** this module — they live in maintenance
-(doc 19, module 22 below), which consumes `service_providers` at assignment time.
+(doc 19, module 23 below), which consumes `service_providers` at assignment time.
 
 ## 14. ai (Ring 3) — **DEFERRED: builds only at national scale** (business docs README, 02 §6)
 
@@ -299,7 +301,14 @@ shared units rent per-slot (one lease per occupant); current occupants screen ap
 dedicated conversations and hold a veto; landlord decides last; occupant profile visibility is
 consent-first. Emits `roommate.*`; listens `lease.*`.
 
-## 22. maintenance (Ring 3)
+## 22. geo (Ring 2)
+
+Fully specified in **doc 20**. Owns `points_of_interest` — the OSM-imported, ops-curated POI
+catalog (universities first) behind the anchor-and-radius search: any POI or dropped pin
+becomes a search anchor with a resizable circle, feeding the feed's PostGIS filter (doc 05
+§6). Read-only reference data for the rest of the domain; refreshed by the `poi.refresh` job.
+
+## 23. maintenance (Ring 3)
 
 Fully specified in **doc 19**. Owns `maintenance_tickets`, `ticket_attachments`,
 `maintenance_visits` — in-chat repair tickets (category, urgency SLAs, photos/videos), state

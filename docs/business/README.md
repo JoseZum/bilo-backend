@@ -17,6 +17,8 @@ assumption to validate, or an explicit decision with trade-offs.
 | 08 | [Finance, Runway & Team](./08-finance-runway-and-team.md) | Burn by phase, runway scenarios, fundraising-to-gates mapping, hiring order, discipline rules |
 | 09 | [Metrics & Analytics](./09-metrics-and-analytics.md) | North star, the KPI tree behind every gate, event tracking plan, operating cadence |
 | 10 | [Risk Register](./10-risk-register.md) | Every known risk with mitigation, trigger→response, and owner — reviewed weekly |
+| 11 | [Bootstrap Plan](./11-bootstrap-plan.md) | The no-money phase: Milestone 1 (stores + marketplace core + student badge, adless, free-tier infra, zero legal triggers) → Milestone 2 (external cash → S.R.L. → Hacienda → revenue ladder); the golden rule + three payment structures |
+| 12 | [PSP Landscape (CR)](./12-psp-landscape.md) | ONVO/Tilopay/GreenPay/LAFISE research: split settlement unconfirmed in CR, structure-B fallback guaranteed, adapter phasing, the L7 sales question sheet |
 
 ## The strategy in one paragraph
 
