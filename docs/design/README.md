@@ -34,6 +34,11 @@ Read in order the first time. After that, each doc stands alone.
 | 12 | [API Conventions](./12-api-conventions.md) | Versioning, pagination, error envelope, idempotency, rate limiting |
 | 13 | [Implementation Roadmap](./13-roadmap.md) | The build order: epics, tasks, and acceptance criteria a junior can execute |
 | 14 | [Frontend Alignment](./14-frontend-alignment.md) | What the bilo-frontend prototype pins down: launch market, wire contract, payouts, chat cards, AI lease review |
+| 15 | [Rentable Inventory](./15-rentable-inventory.md) | The unit hierarchy: rooms in apartments in buildings, the extensible unit-type registry, units vs listings |
+| 16 | [Identity Verification](./16-identity-verification.md) | The verified-profile badge, the unique government-ID record, one-person-one-account, ban semantics |
+| 17 | [Waiting Lists](./17-waiting-lists.md) | Per-listing waiting pools, landlord filters (verified-only, trust), invite → match pipeline |
+| 18 | [Shared Units & Roommates](./18-roommates.md) | Per-slot leases, roommate applications, current-occupant screening & veto, consent-first visibility |
+| 19 | [Maintenance Tickets](./19-maintenance-tickets.md) | In-chat repair tickets: categories, urgency SLAs, media, visit scheduling, reminders, "technician en route" |
 
 ## Design principles (the short version)
 
