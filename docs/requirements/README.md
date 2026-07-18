@@ -4,7 +4,7 @@ The scope of the project in numbers, and the process that turns it into code.
 
 | Doc | What it answers |
 |---|---|
-| [ERS — Software Requirements Specification](./ers.md) | Every functional requirement, numbered (`FR-<MODULE>-<NNN>`), prioritized (MoSCoW), and sourced from the design docs, business docs, and the bilo-frontend prototype. §5 totals the scope: **246 FRs + 15 NFRs** |
+| [ERS — Software Requirements Specification](./ers.md) | Every functional requirement, numbered (`FR-<MODULE>-<NNN>`), prioritized (MoSCoW), and sourced from the design docs, business docs, and the bilo-frontend prototype. §5 totals the scope: **261 FRs + 15 NFRs** |
 | [Delivery process](./sdlc-plan.md) | How an FR becomes a ticket, a branch, a PR, and a test — tracker setup (GitHub Projects, Jira-compatible), epics-by-module, traceability conventions, DoR/DoD, cadence |
 | `traceability.md` *(created per epic as work starts)* | FR → story → PR → test status matrix; the real burndown |
 

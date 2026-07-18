@@ -43,6 +43,7 @@ Read in order the first time. After that, each doc stands alone.
 | 17 | [Waiting Lists](./17-waiting-lists.md) | Per-listing waiting pools, landlord filters (verified-only, trust), invite → match pipeline |
 | 18 | [Shared Units & Roommates](./18-roommates.md) | Per-slot leases, roommate applications, current-occupant screening & veto, consent-first visibility |
 | 19 | [Maintenance Tickets](./19-maintenance-tickets.md) | In-chat repair tickets: categories, urgency SLAs, media, visit scheduling, reminders, "technician en route" |
+| 20 | [Geo Search & POI](./20-geo-search-and-poi.md) | Anchor-and-radius map search, the OSM-imported POI catalog (universities first), category registry, map/tile decisions |
 
 ## Design principles (the short version)
 

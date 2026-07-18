@@ -1,6 +1,6 @@
 # bilo — Delivery Process: From Requirement to Code to Test
 
-This is the operating manual for turning the [ERS](./ers.md)'s 246 numbered requirements into
+This is the operating manual for turning the [ERS](./ers.md)'s 261 numbered requirements into
 shipped, tested code without losing track of a single one. It defines the tracker setup, how
 requirements become tickets, the naming conventions that give us end-to-end traceability
 (FR → ticket → branch → PR → test), the workflow states, and the cadence. It is written so the
@@ -70,7 +70,7 @@ duplicate design content into tickets — link it.
 | Foundations | PLAT | D02–D05, D08–D12 | Epic 0 |
 | Identity & accounts | AUTH, USER, PREF, APP | D06, D07§2–3 | Epic 1 |
 | Supply | PROP | D07§4 | Epic 2 |
-| Discovery | DISC, MATCH, CHAT | D07§5–7 | Epic 3 |
+| Discovery | DISC, MATCH, CHAT, GEO | D07§5–7, D20 | Epic 3 |
 | The rail | LEASE, PAY | D07§8–9, D14 | Epic 4 |
 | Trust fabric | TRUST, RATE, DISP, NOTIF, ADMIN | D07§10–12,15–16 | Epic 5 |
 | Services & hardening | SERV | D07§13 | Epic 6 |
@@ -130,7 +130,7 @@ The FR ID travels through every artifact:
 | Traceability matrix | one row per FR, updated in the same PR | see below |
 
 **The matrix** lives at `docs/requirements/traceability.md`, one table per epic, **created
-when that epic's work starts** (a 246-row placeholder file today would be noise). Row format:
+when that epic's work starts** (a 261-row placeholder file today would be noise). Row format:
 
 ```markdown
 | FR | Story | PR | Test(s) | Status |
