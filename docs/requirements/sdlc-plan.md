@@ -1,6 +1,6 @@
 # bilo — Delivery Process: From Requirement to Code to Test
 
-This is the operating manual for turning the [ERS](./ers.md)'s 261 numbered requirements into
+This is the operating manual for turning the [ERS](./ers.md)'s 262 numbered requirements into
 shipped, tested code without losing track of a single one. It defines the tracker setup, how
 requirements become tickets, the naming conventions that give us end-to-end traceability
 (FR → ticket → branch → PR → test), the workflow states, and the cadence. It is written so the
@@ -130,7 +130,7 @@ The FR ID travels through every artifact:
 | Traceability matrix | one row per FR, updated in the same PR | see below |
 
 **The matrix** lives at `docs/requirements/traceability.md`, one table per epic, **created
-when that epic's work starts** (a 261-row placeholder file today would be noise). Row format:
+when that epic's work starts** (a 262-row placeholder file today would be noise). Row format:
 
 ```markdown
 | FR | Story | PR | Test(s) | Status |

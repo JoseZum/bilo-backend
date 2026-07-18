@@ -1,7 +1,8 @@
 # bilo — Software Requirements Specification (ERS)
 
-**Version 1.1 — 2026-07-18 · Status: DRAFT for product review**
+**Version 1.2 — 2026-07-18 · Status: DRAFT for product review**
 *(v1.1: added GEO module — anchored map search & OSM POI catalog, FR-GEO-001…015, per D20)*
+*(v1.2: added FR-APP-009 (conditional ads, C) and §5.1 release gates per the bootstrap plan, B11)*
 
 This is the complete, numbered inventory of what bilo must do. Its job is to put the project's
 scope **into numbers**: every functional requirement (FR) has an ID, a priority, and a source,
@@ -80,6 +81,7 @@ modes (FE role switch "Cliente/Admin"):
 | FR-APP-006 | Non-blocking toast feedback for every user action (success/info/danger) | M | FE:* |
 | FR-APP-007 | Graceful degraded mode when API is unreachable: cached/last-known data + visible indicator | C | FE:data-layer |
 | FR-APP-008 | All amounts render as CRC (₡) with locale formatting; dates in es-CR | M | D01§1, FE:* |
+| FR-APP-009 | In-app ads (if ever enabled per the B11 decision rule): clearly labeled as advertising, never in chat or payment-adjacent screens | C | B11§2, Ley 10946 |
 
 ### 3.3 USER — Users & profiles (D07§2)
 
@@ -465,7 +467,7 @@ Functional requirements by module and priority (counts generated from the tables
 | Module | Area | M | S | C | W | Total |
 |---|---|---|---|---|---|---|
 | AUTH | Authentication & sessions | 11 | 1 | 0 | 0 | **12** |
-| APP | Client app shell | 6 | 1 | 1 | 0 | **8** |
+| APP | Client app shell | 6 | 1 | 2 | 0 | **9** |
 | USER | Users & profiles | 6 | 4 | 0 | 0 | **10** |
 | PREF | Tenant preferences | 5 | 1 | 0 | 0 | **6** |
 | INV | Rentable inventory | 0 | 13 | 0 | 0 | **13** |
@@ -488,7 +490,7 @@ Functional requirements by module and priority (counts generated from the tables
 | ADMIN | Back-office & ops | 3 | 4 | 1 | 0 | **8** |
 | PLAT | Platform & API | 10 | 0 | 0 | 0 | **10** |
 | GEO | Map search & POI | 4 | 9 | 2 | 0 | **15** |
-| **Total FR** | | **129** | **110** | **13** | **9** | **261** |
+| **Total FR** | | **129** | **110** | **14** | **9** | **262** |
 | NFR | Non-functional | 13 | 2 | 0 | 0 | **15** |
 
 **Reading the numbers:**
@@ -498,13 +500,27 @@ Functional requirements by module and priority (counts generated from the tables
 - **110 Should requirements** are the launch-adjacent wave — dominated by the five D15–D19
   features (maintenance 16, inventory 13, roommates 13, waitlists 12, identity 8) plus the POI
   catalog (9, D20) — mapping to roadmap Epic 7, the Epic 3 geo tasks, and scattered UX polish.
-- **13 Could + 9 Won't** are consciously parked (Stage-2 seams, isochrones, and deferred AI);
-  they cost
+- **14 Could + 9 Won't** are consciously parked (Stage-2 seams, isochrones, conditional ads,
+  and deferred AI); they cost
   nothing now because their seams are already in the design.
 - Rule of thumb for sizing: prototype-validated M-requirements average ~0.5–1 dev-day each
   hardened-for-production; greenfield S-requirements (docs 15–19) average ~1–2. That puts
   launch at roughly **90–120 dev-days** of focused backend+frontend work and the full ERS at
   ~**250–350** — consistent with the epic sizing already in D13.
+
+### 5.1 Release gates (bootstrap plan, B11)
+
+MoSCoW priorities are unchanged — "Must" still means "required for the full Stage-1 product."
+This table adds *when each module is allowed to ship* under the bootstrap strategy
+([business doc 11](../business/11-bootstrap-plan.md)): legal/tax triggers gate releases, not
+priorities.
+
+| Gate | Modules / scope | Why gated |
+|---|---|---|
+| **M1 — marketplace launch** (stores, no revenue) | AUTH, APP, USER, PREF, PROP, DISC, GEO, MATCH, CHAT, NOTIF, TRUST (display basics), RATE (read path), PLAT + FR-IDV-010 (student badge) | Zero triggers: no money, no sensitive data, no contracts |
+| **M2 — formalization + first revenue** (S.R.L. + Hacienda) | PAY subset: fee/subscription billing (structure B), landlord subscription features; ADMIN basics | Requires entity, Hacienda registration, e-invoicing |
+| **Trigger-gated (post-M2)** | LEASE (needs L1/L8 counsel memo), IDV cédula flow (needs Ley 8968 consent screens), PAY rent-rail (needs PSP per B12), WAIT/ROOM/MAINT/INV wave, DISP full flow | Each names its own legal/partnership prerequisite |
+| **Parked** | AI (W), isochrones, ads (FR-APP-009 decision rule) | B02 §6 deferral; B11 §2 ads rule |
 
 ## 6. Change control
 
