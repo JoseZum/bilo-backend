@@ -10,6 +10,10 @@ and the condition under which we would revisit it.
 live in [`docs/business/`](../business/README.md); two of its decisions bind this design — AI is
 deferred to national scale, and the launch niche is Costa Rican university students.
 
+**Requirements counterpart:** the numbered functional-requirements inventory (ERS) and the
+requirement-to-code delivery process live in [`docs/requirements/`](../requirements/README.md);
+the ERS cites these design docs as the normative spec behind each requirement.
+
 **The prototype in this repo is the input, not the target.** The current code (NestJS + Prisma on
 SQLite, mock providers, mock-login) validated the product flows. These docs describe what we keep,
 what we replace, and in what order.
