@@ -60,7 +60,13 @@ idempotent event listeners (S; 07 §4).
 weights from config; per-response score log; excludes swiped/own/inactive. · 3.2 Swipes with
 upsert-grace + events (S). · 3.3 Matches + state machine + same-tx conversation creation (M;
 07 §6). · 3.4 Chat endpoints with cursor pagination + read markers (M; 07 §7). · 3.5 Feed
-caching via `getOrSet` (works as noop today) (S; 08 §3).
+caching via `getOrSet` (works as noop today) (S; 08 §3). · 3.6 Anchor+radius feed params over
+PostGIS (`anchorLat/anchorLng/radiusM`, clamps, `distanceM` in results) (M; 20 §1) — AC:
+within-radius + distance-order integration test. · 3.7 geo module: POI table + `poi.refresh`
+Overpass import + typeahead + admin curation; `UNIVERSITY` seeded and alias-curated (L; 20
+§3–5) — AC: import idempotent; "TEC" resolves; curated fields survive refresh. · 3.8 Real map
+in filter sheet: MapLibre + OSM tiles + attribution, draggable pin, resizable circle, POI
+markers/search, "buscar en esta zona" (L; 20 §2,5).
 
 ## Epic 4 — The rail (leases + payments) — the senior-attention epic
 

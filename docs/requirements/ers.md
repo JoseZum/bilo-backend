@@ -1,6 +1,7 @@
 # bilo — Software Requirements Specification (ERS)
 
-**Version 1.0 — 2026-07-18 · Status: DRAFT for product review**
+**Version 1.1 — 2026-07-18 · Status: DRAFT for product review**
+*(v1.1: added GEO module — anchored map search & OSM POI catalog, FR-GEO-001…015, per D20)*
 
 This is the complete, numbered inventory of what bilo must do. Its job is to put the project's
 scope **into numbers**: every functional requirement (FR) has an ID, a priority, and a source,
@@ -413,6 +414,26 @@ Technical requirements every module inherits — listed once, tested centrally.
 | FR-PLAT-009 | Scheduled jobs: advisory-locked, idempotent, observable (full catalog in D09§4) | M | D09§4 |
 | FR-PLAT-010 | Soft delete with automatic filtering; GDPR-shaped export/erasure endpoints | M | D05§4 |
 
+### 3.24 GEO — Map search & points of interest (D20)
+
+| ID | Requirement | Pri | Source |
+|---|---|---|---|
+| FR-GEO-001 | Real interactive map in search filters (MapLibre + OSM-based tiles, pan/zoom) with visible "© OpenStreetMap contributors" attribution | M | D20§2, FE:FilterSheet |
+| FR-GEO-002 | Drop or drag a pin anywhere on the map to set the search anchor | M | D20§1, FE:FilterSheet |
+| FR-GEO-003 | Visible circle around the anchor, resizable by dragging its rim (or pinch); radius server-clamped | M | D20§1,5 |
+| FR-GEO-004 | Feed/search accepts anchor + radius combined with all other filters; results ordered by distance and carrying `distanceM` ("a 1.2 km de TEC") | M | D20§1 |
+| FR-GEO-005 | Result count updates live while the circle is adjusted; "Buscar en esta zona" applies the anchor | S | D20§5 |
+| FR-GEO-006 | POI catalog imported from OSM into a platform table scoped to launch regions; weekly idempotent refresh that never clobbers curated fields | S | D20§3 |
+| FR-GEO-007 | POI category registry with UNIVERSITY launch-enabled; adding a category = registry entry + import run, no schema change | S | D20§4 |
+| FR-GEO-008 | POI typeahead search by name or alias ("TEC" resolves to Tecnológico de Costa Rica) | S | D20§5 |
+| FR-GEO-009 | Map shows markers for the selected POI category within the viewport | S | D20§5 |
+| FR-GEO-010 | Selecting a POI centers the circle on it with the category's default radius | S | D20§4–5 |
+| FR-GEO-011 | Ops POI curation: verify/hide, edit aliases, add manual POIs; curated university seed pass (~15 launch campuses) | S | D20§3–4 |
+| FR-GEO-012 | Save an anchor + radius (including its POI reference) as the tenant's default search location | S | D20§7 |
+| FR-GEO-013 | Use device location as the anchor (with permission) | S | D20§1 |
+| FR-GEO-014 | Additional POI categories (schools, hospitals, transit, supermarkets, parks, …) enabled progressively | C | D20§4 |
+| FR-GEO-015 | Travel-time isochrone search ("20 min by bus from campus") | C | D20§6 |
+
 ---
 
 ## 4. Non-functional requirements (summary — normative detail in D01§4, D10–D12)
@@ -466,17 +487,19 @@ Functional requirements by module and priority (counts generated from the tables
 | AI | Assistant features | 0 | 0 | 0 | 5 | **5** |
 | ADMIN | Back-office & ops | 3 | 4 | 1 | 0 | **8** |
 | PLAT | Platform & API | 10 | 0 | 0 | 0 | **10** |
-| **Total FR** | | **125** | **101** | **11** | **9** | **246** |
+| GEO | Map search & POI | 4 | 9 | 2 | 0 | **15** |
+| **Total FR** | | **129** | **110** | **13** | **9** | **261** |
 | NFR | Non-functional | 13 | 2 | 0 | 0 | **15** |
 
 **Reading the numbers:**
-- **125 Must requirements** are the Stage-1 launch: the core loop (auth → discover → solicitud
-  → chat → contract → pay) plus trust, disputes, notifications, and the platform floor.
-  They map to roadmap Epics 0–6 (D13).
-- **101 Should requirements** are the launch-adjacent wave — dominated by the five D15–D19
-  features (maintenance 16, inventory 13, roommates 13, waitlists 12, identity 8) — mapping to
-  roadmap Epic 7 plus scattered UX polish.
-- **11 Could + 9 Won't** are consciously parked (Stage-2 seams and deferred AI); they cost
+- **129 Must requirements** are the Stage-1 launch: the core loop (auth → discover → solicitud
+  → chat → contract → pay) plus trust, disputes, notifications, anchored map search, and the
+  platform floor. They map to roadmap Epics 0–6 (D13).
+- **110 Should requirements** are the launch-adjacent wave — dominated by the five D15–D19
+  features (maintenance 16, inventory 13, roommates 13, waitlists 12, identity 8) plus the POI
+  catalog (9, D20) — mapping to roadmap Epic 7, the Epic 3 geo tasks, and scattered UX polish.
+- **13 Could + 9 Won't** are consciously parked (Stage-2 seams, isochrones, and deferred AI);
+  they cost
   nothing now because their seams are already in the design.
 - Rule of thumb for sizing: prototype-validated M-requirements average ~0.5–1 dev-day each
   hardened-for-production; greenfield S-requirements (docs 15–19) average ~1–2. That puts
