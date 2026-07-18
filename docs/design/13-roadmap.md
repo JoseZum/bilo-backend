@@ -107,9 +107,29 @@ path (k6) against staging; fix the top 3 findings (M). · 6.5 Runbooks + restore
 wiring (M; 10 §4–6). · 6.6 Security pass: dependency audit, OWASP top-10 checklist, secret scan
 (M).
 
-**Stage-1 launch gate:** all epics done · golden-path e2e green · reconciliation clean over a
+**Stage-1 launch gate:** Epics 0–6 done · golden-path e2e green · reconciliation clean over a
 week of staging traffic with real Stripe test mode · restore drill executed · alerts fire in a
 game-day test.
+
+## Epic 7 — Inventory, identity & community wave (docs 15–19; launch-adjacent)
+
+The unit hierarchy, verified identities, waiting lists, roommate screening, and maintenance
+tickets. **Not part of the Stage-1 launch gate** — product picks which tasks ride the launch
+train (7.1 and 7.3 are the strongest launch candidates for the student niche; the rest are
+fast-follows). Sequencing: 7.1–7.2 unblock 7.5–7.8; 7.3 is independent and can start during
+Epic 5; 7.4 must precede 7.6–7.7. If 7.1 is chosen for launch, land its expand-phase migration
+with Epic 2 to avoid touching `properties` twice.
+
+| # | Task | Size | Spec | AC |
+|---|---|---|---|---|
+| 7.1 | inventory module: `rentable_units` + type registry + CRUD/tree endpoints + `properties.unit_id` expand & backfill | L | 15 | Registry rejects invalid parent/child pairs (test matrix over the §3 catalog); backfill idempotent; tree endpoint depth-capped |
+| 7.2 | leases × inventory: `unit_id`, `occupancyMode`, `assertLeasable` (ancestor/descendant + slot invariants, `FOR UPDATE`) | M | 15 §4, 07 §8 | Concurrent activation race → exactly one wins; conflict matrix (exclusive-over-slot, slot-over-exclusive, oversell) covered |
+| 7.3 | identity module: `identity_records` + HMAC hashing + manual review queue + badge projection + `user.verified` trust hook | L | 16 | Duplicate document → constraint conflict + appeal path; erasure scrubs PII but keeps hash; document number absent from logs (redaction test) |
+| 7.4 | conversations generalization: `(context_type, context_id)` + `conversation_participants` + backfill | M | 18 §5 | Existing match chats migrated; access control by participant row (e2e); `ROOMMATE_REVIEW` freeze-on-resolve |
+| 7.5 | waitlists module: join/withdraw, landlord filter view, invite → pre-accepted match, caps, expiry job | M | 17 | `verifiedOnly` filter e2e; invite opens conversation in same tx; 20-entry cap and `requiresVerifiedIdentity` enforced at join |
+| 7.6 | roommates module: applications + per-occupant reviews + veto chain + consent-first visibility + expiry job | L | 18 | Unanimous-approval logic property-tested (occupant set changes mid-review); occupant veto final; landlord cannot write visibility |
+| 7.7 | maintenance module: tickets + attachments (presign, EXIF strip) + state machine + `MAINTENANCE_TICKET` chat card | L | 19 | Transition table 100% covered; reopen window enforced; card renders from live ticket status |
+| 7.8 | maintenance visits: scheduling + confirm/propose + reminder, auto-close, SLA-nudge jobs + en-route push | M | 19 §4–6 | Each job run twice → one notification (dedup anchors); en-route → tenant push e2e; NO_SHOW path recorded |
 
 ---
 

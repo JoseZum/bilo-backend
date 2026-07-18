@@ -103,6 +103,12 @@ REST polling at Stage 1 (mobile polls the list screen; acceptable to
 pub/sub adapter for multi-instance fan-out) — **message persistence path is identical**; the
 socket is a delivery optimization, so no API break. Message bodies are PII: scrubbed on account
 erasure; length-capped (4k chars); no attachments until storage moderation story exists.
+**Amended by doc 18 §5:** conversations generalize from match-scoped to context-scoped
+(`(context_type, context_id)` unique + `conversation_participants`; contexts:
+`MATCH | ROOMMATE_REVIEW | LEASE`) so roommate screening chats and the lifelong tenant↔landlord
+lease thread reuse this module. Doc 19 §5 adds the `MAINTENANCE_TICKET` card to the
+`message_type` set. The attachment ban stands for free-form chat — ticket photos/videos ride on
+the ticket entity (doc 19 §1), never on messages.
 
 ## 8. leases (Ring 2) — deep spec
 
@@ -221,7 +227,8 @@ Marketplace for property services (cleaning, plumbing). Prototype model kept
 `PENDING → ACCEPTED → SCHEDULED → COMPLETED | CANCELLED`). Stage 1: manual provider onboarding
 via admin endpoints. Monetization hook: `service_requests` gets `payment_id` (nullable) so a
 completed request can be charged through the same payment rail later — do not build until
-product asks.
+product asks. Tenancy repair workflows are **not** this module — they live in maintenance
+(doc 19, module 22 below), which consumes `service_providers` at assignment time.
 
 ## 14. ai (Ring 3) — **DEFERRED: builds only at national scale** (business docs README, 02 §6)
 
@@ -241,8 +248,10 @@ in the service; **AI output is never a source of truth** — it's UX sugar over 
 
 **Purpose.** Single place that turns domain events into user-facing noise.
 **Owns.** `notifications`, `device_tokens` (new).
-**Listens.** `match.*`, `message.sent`, `payment.*`, `lease.*`, `dispute.*` — mapping table in
-code (`notification-rules.ts`): event → (audience, template, channels).
+**Listens.** `match.*`, `message.sent`, `payment.*`, `lease.*`, `dispute.*`, `waitlist.*`
+(doc 17 §6), `roommate.*` (doc 18 §6), `ticket.*` including visit reminders and en-route
+(doc 19 §6) — mapping table in code (`notification-rules.ts`): event →
+(audience, template, channels).
 **Channels.** `NotificationChannelPort[]`: `InAppChannel` (DB row — Stage 1),
 `PushChannel` (FCM/APNs — Stage 1.5, `PUSH_ENABLED`), `EmailChannel` (Resend/SES —
 `EMAIL_ENABLED`). Channels fail independently; in-app write is the one that must not fail.
@@ -261,6 +270,43 @@ at Stage 3, archived to object storage after 12 months.
 current + queue driver ping when enabled). Load balancer uses readiness; liveness restarts the
 container. Never behind auth.
 
+## 18. inventory (Ring 2)
+
+Fully specified in **doc 15**. Owns `rentable_units` — the physical unit tree
+(room ⊂ apartment ⊂ building) with the extensible unit-type registry. `properties` becomes the
+listing of exactly one unit. Exposes `assertLeasable(tx, unitId, mode)` to leases — a
+sanctioned same-tx call (see closing note). Emits `unit.created|updated|archived`.
+
+## 19. identity (Ring 1)
+
+Fully specified in **doc 16**. Owns `identity_records` — the unique government-ID record behind
+the verified badge; one identity per account, one account per government ID, record survives
+bans. `IdentityVerificationPort` (`mock|manual|provider`). Writes `users.verification_status`
+(single-writer, same exception model as trust). Emits `identity.submitted`, `user.verified`,
+`identity.rejected|revoked`.
+
+## 20. waitlists (Ring 3)
+
+Fully specified in **doc 17**. Owns `waiting_lists`, `waiting_list_entries` — per-listing pools
+with landlord-side filters (verified-only, trust, budget fit); invite path creates a
+pre-accepted match, then the normal pipeline runs. Emits `waitlist.*`; listens `lease.*` for
+conversion/expiry.
+
+## 21. roommates (Ring 3)
+
+Fully specified in **doc 18**. Owns `roommate_applications`, `roommate_application_reviews` —
+shared units rent per-slot (one lease per occupant); current occupants screen applicants in
+dedicated conversations and hold a veto; landlord decides last; occupant profile visibility is
+consent-first. Emits `roommate.*`; listens `lease.*`.
+
+## 22. maintenance (Ring 3)
+
+Fully specified in **doc 19**. Owns `maintenance_tickets`, `ticket_attachments`,
+`maintenance_visits` — in-chat repair tickets (category, urgency SLAs, photos/videos), state
+machine `REPORTED → … → CLOSED`, visit scheduling with tenant confirmation, 24 h/1 h reminders,
+en-route notification. Supersedes the prototype's `maintenance_requests` table. Emits
+`ticket.*`; consumes `service_providers` (module 13) at assignment.
+
 ---
 
 ## Cross-module event flow (the big picture)
@@ -269,13 +315,21 @@ container. Never behind auth.
 swipe.created ─→ properties(analytics)  ─→ reco projection (S3)
 match.accepted ─→ conversations(create) [same-tx call] ─→ notifications
 lease.activated ─→ payments(skeleton) [same-tx] ─→ property(RENTED) ─→ notifications
+              └─→ waitlists(convert/expire) ─→ roommates(expire when full)
 payment.paid ─→ trust(+) ─→ notifications(receipt)
 payment.overdue ─→ notifications(dunning) ─→ trust(−, after grace)
 dispute.resolved ─→ trust(±) ─→ notifications
-lease.completed ─→ ratings(window opens) ─→ property(ACTIVE) 
+lease.completed ─→ ratings(window opens) ─→ property(ACTIVE) ─→ waitlists(spot_opened)
+lease.terminated ─→ roommates(void pending reviews)
 rating.created ─→ trust(±)
+user.verified ─→ trust(+10) ─→ notifications(badge granted)
+waitlist.invited / roommate.accepted ─→ matches(create, pre-accepted) [same-tx call]
+ticket.* ─→ notifications (reminders & en-route via jobs, doc 19 §6)
 ```
 
-If a junior remembers one thing: **solid arrows into Ring 0 are always events; the two
-"[same-tx call]" edges are the only sanctioned synchronous cross-module writes, and both are
-documented here.** Anything new that looks like a third one needs an ADR.
+If a junior remembers one thing: **solid arrows into Ring 0 are always events; the
+"[same-tx call]" edges are the only sanctioned synchronous cross-module writes, and every one
+is documented here.** The full sanctioned list: match-accept → conversations.create;
+lease-sign → payments skeleton; lease-sign → `inventory.assertLeasable` (lock + invariant
+check, doc 15 §4); waitlist-invite and roommate-accept → matches.create (docs 17 §3, 18 §4).
+Anything new that looks like another one needs an ADR.

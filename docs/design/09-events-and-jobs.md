@@ -85,6 +85,11 @@ on failure.**
 | `tokens.prune` | daily | Delete expired/revoked refresh tokens > 60 days old |
 | `outbox.relay` / `outbox.prune` | 250ms poll / daily | Stage 2 (§3) |
 | `pii.scrub` | on demand (queued by user.deleted) | Erasure flow (doc 05 §4) |
+| `waitlist.expire-entries` | daily | Stale invites (>7 d) and entries on archived listings → EXPIRED (doc 17 §6) |
+| `roommate.expire-applications` | daily | Review states idle >14 d → EXPIRED, day-7 nudge (doc 18 §6) |
+| `maintenance.visit-reminders` | every 15 min | 24 h / 1 h visit reminders (`reminder*SentAt` set in same tx; doc 19 §6) |
+| `maintenance.auto-close` | daily | RESOLVED >7 d without tenant action → CLOSED, day-5 warning (doc 19 §6) |
+| `maintenance.sla-nudge` | hourly | REPORTED past first-response target → nudge landlord (`sla_nudged_at` dedup; doc 19 §6) |
 
 Jobs are plain classes (`@Injectable() RentGenerateJob { run(ctx) }`) registered with the
 scheduler — testable by calling `run()` with a fixed Clock, no cron in tests.
