@@ -5,6 +5,12 @@ The research below changes real architecture and business decisions — two prio
 **desk research to be validated by local counsel before the pilot signs its first lease**; the
 "Action items" table at the end is the engagement brief for that lawyer.
 
+> **Deep dive:** this doc is the executive summary. The detailed research — entity &
+> registration costs, the Airbnb liability playbook and the new **Ley 10946** platform
+> obligations, the Ley 9742 hospedaje boundary, Ley 8968 identity/biometric rules, and the
+> criminal-exposure map — lives in [`docs/legal/costa-rica/`](../legal/costa-rica/README.md),
+> which also extends this brief with counsel items L8–L13.
+
 ## 1. Entity & payments reality check
 
 ### Finding 1: Stripe does not operate in Costa Rica

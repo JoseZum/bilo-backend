@@ -9,6 +9,10 @@ cannot return with a fresh email, and one person cannot farm accounts.
 New **identity module** (Ring 1, builds alongside doc 07 §2 users). Auth (doc 06) is untouched:
 OAuth answers "who logs in"; identity answers "which legal person is this."
 
+> **Legal grounding:** the CR data-protection analysis behind these decisions (Ley 8968,
+> biometric-data status, consent-screen requirements, PRODHAB registration, the TSE VID
+> warning) is in [`docs/legal/costa-rica/04`](../legal/costa-rica/04-identity-and-data-protection.md).
+
 ## 1. The identity record
 
 **Decision.** A dedicated entity — not columns on `users` — because the record must be able to
