@@ -19,6 +19,7 @@ production-grade because SQLite forced strings for enums/JSON. That gets fixed f
 | 8 | Add missing composite indexes listed in §5 | Hot-path queries |
 | 9 | Add `version Int @default(0)` to `payments`, `leases`, `disputes` | Optimistic locking (§7) |
 | 10 | New tables: `refresh_tokens`, `idempotency_keys`, `outbox_events`, `webhook_events`, `rent_periods` | Docs 06, 09, 07 |
+| 11 | Feature-wave tables: `rentable_units` (+ `properties.unit_id`), `identity_records`, `waiting_lists`, `waiting_list_entries`, `roommate_applications`, `roommate_application_reviews`, `maintenance_tickets`, `ticket_attachments`, `maintenance_visits`; conversations gain `(context_type, context_id)` + `conversation_participants`; `maintenance_requests` dropped after migration | Docs 15–19 (build order in doc 13 Epic 7) |
 
 ## 2. Identifiers — UUIDv7
 
@@ -86,7 +87,13 @@ transaction and log the ID before commit).
 - **Invariants live in constraints:** `UNIQUE(swipes.user_id, property_id)`,
   `UNIQUE(matches.tenant_id, property_id)`, `UNIQUE(rent_periods.lease_id, period_start)`
   (prevents double rent generation), CHECK constraints on money splits and score ranges
-  (`trust_score BETWEEN 0 AND 100`).
+  (`trust_score BETWEEN 0 AND 100`). Feature-wave additions:
+  `UNIQUE(identity_records: country_code, document_type, document_number_hash)` — the
+  one-government-ID-one-account rule (doc 16 §1);
+  `UNIQUE(waiting_list_entries: waiting_list_id, user_id)`;
+  `UNIQUE(roommate_applications: property_id, applicant_id)`; partial unique
+  `properties(unit_id) WHERE status IN ('ACTIVE','PAUSED')` — one live listing per unit
+  (doc 15 §9); unit tree depth CHECK (doc 15 §2).
 - **Optimistic locking** (`version` column, compare-and-increment in `UPDATE ... WHERE version = $n`)
   on `payments`, `leases`, `disputes` — the rows humans and webhooks race on. On conflict the
   service retries the read-decide-write cycle once, then surfaces `409`.
