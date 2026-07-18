@@ -6,6 +6,14 @@ criteria (AC)**. Order matters: each epic leaves `main` deployable and demo-able
 
 Sizing: S = ≤1 day, M = 2–3 days, L = ~1 week (for a junior with these docs; halve for a senior).
 
+> **Bootstrap sequencing (business doc 11):** the epics below describe the full Stage-1
+> production build; the bootstrap plan releases them in gated slices. **Milestone 1**
+> (app-store marketplace launch, no revenue) ships Epics 0–3 + the doc 20 geo tasks + student
+> verification (1.7) — explicitly *without* Epic 4 (leases/payments), cédula verification, or
+> the Epic 7 wave. **Milestone 2** (S.R.L. + Hacienda) unlocks fee/subscription billing
+> (structure B, business doc 12 §3); the rent rail and lease tasks stay behind their legal
+> triggers (ERS §5.1 release-gate table).
+>
 > **Frontend-driven additions:** doc 14 §4 adds tasks to Epics 3 and 4 (favorites, chat
 > card types, Stripe Connect payouts + landlord dashboard, manual payments).
 > Treat that list as part of this roadmap.
