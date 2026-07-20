@@ -44,6 +44,8 @@ Read in order the first time. After that, each doc stands alone.
 | 18 | [Shared Units & Roommates](./18-roommates.md) | Per-slot leases, roommate applications, current-occupant screening & veto, consent-first visibility |
 | 19 | [Maintenance Tickets](./19-maintenance-tickets.md) | In-chat repair tickets: categories, urgency SLAs, media, visit scheduling, reminders, "technician en route" |
 | 20 | [Geo Search & POI](./20-geo-search-and-poi.md) | Anchor-and-radius map search, the OSM-imported POI catalog (universities first), category registry, map/tile decisions |
+| 21 | [Journey Completions](./21-journey-completions.md) | Property viewings, saved searches & alerts, compare, roommate-seeker matching, rental CV, fiador, report & block, house rules, verified listings, termination notice |
+| 22 | [Subscriptions & Entitlements](./22-subscriptions-and-entitlements.md) | The MON module: plan registry, entitlement gating, structure-B recurring billing with auto e-invoicing, dunning, "Destacado" placement rules |
 
 ## Design principles (the short version)
 

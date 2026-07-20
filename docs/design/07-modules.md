@@ -107,10 +107,12 @@ socket is a delivery optimization, so no API break. Message bodies are PII: scru
 erasure; length-capped (4k chars); no attachments until storage moderation story exists.
 **Amended by doc 18 §5:** conversations generalize from match-scoped to context-scoped
 (`(context_type, context_id)` unique + `conversation_participants`; contexts:
-`MATCH | ROOMMATE_REVIEW | LEASE`) so roommate screening chats and the lifelong tenant↔landlord
-lease thread reuse this module. Doc 19 §5 adds the `MAINTENANCE_TICKET` card to the
-`message_type` set. The attachment ban stands for free-form chat — ticket photos/videos ride on
-the ticket entity (doc 19 §1), never on messages.
+`MATCH | ROOMMATE_REVIEW | LEASE | ROOMMATE_SEEKER` — the last from doc 21 §4) so roommate
+screening chats, seeker chats, and the lifelong tenant↔landlord lease thread reuse this
+module. Doc 19 §5 adds the `MAINTENANCE_TICKET` card and doc 21 §1 the `VISIT_PROPOSAL` card
+to the `message_type` set. Blocks (doc 21 §6) freeze conversations read-only. The attachment
+ban stands for free-form chat — ticket photos/videos ride on the ticket entity (doc 19 §1),
+never on messages.
 
 ## 8. leases (Ring 2) — deep spec
 
@@ -252,11 +254,15 @@ in the service; **AI output is never a source of truth** — it's UX sugar over 
 **Owns.** `notifications`, `device_tokens` (new).
 **Listens.** `match.*`, `message.sent`, `payment.*`, `lease.*`, `dispute.*`, `waitlist.*`
 (doc 17 §6), `roommate.*` (doc 18 §6), `ticket.*` including visit reminders and en-route
-(doc 19 §6) — mapping table in code (`notification-rules.ts`): event →
+(doc 19 §6), `visit.*`, `alert.hit`, `seeker.matched`, `report.resolved` (doc 21),
+`subscription.*` (doc 22) — mapping table in code (`notification-rules.ts`): event →
 (audience, template, channels).
 **Channels.** `NotificationChannelPort[]`: `InAppChannel` (DB row — Stage 1),
 `PushChannel` (FCM/APNs — Stage 1.5, `PUSH_ENABLED`), `EmailChannel` (Resend/SES —
-`EMAIL_ENABLED`). Channels fail independently; in-app write is the one that must not fail.
+`EMAIL_ENABLED`), `WhatsAppChannel` (Business API — `WHATSAPP_ENABLED`, critical events only:
+visit confirmations/reminders, payment dunning, termination notices; per-message cost makes
+the mapping table the budget control — doc 21 ripples). Channels fail independently; in-app
+write is the one that must not fail.
 **API.** `GET /notifications?cursor=`, `POST /notifications/read`, `PUT /devices/token`.
 
 ## 16. audit (Ring 0, global)
@@ -315,6 +321,29 @@ Fully specified in **doc 19**. Owns `maintenance_tickets`, `ticket_attachments`,
 machine `REPORTED → … → CLOSED`, visit scheduling with tenant confirmation, 24 h/1 h reminders,
 en-route notification. Supersedes the prototype's `maintenance_requests` table. Emits
 `ticket.*`; consumes `service_providers` (module 13) at assignment.
+
+## 24. seeker-tools (Ring 3)
+
+Fully specified in **doc 21** (§1–5). Owns `property_visits`, `saved_searches` (+
+`alert_hits`), `roommate_seeker_profiles`, guarantor profiles, and the rental-CV projection —
+the journey completions: viewing scheduling with `VISIT_PROPOSAL` chat cards and reminders,
+market-watching alerts, compare support, tenant↔tenant seeker matching, consent-first fiador
+attachment, and the shareable hoja de vida. Emits `visit.*`, `alert.hit`, `seeker.matched`.
+
+## 25. subscriptions (Ring 2)
+
+Fully specified in **doc 22**. Owns `subscriptions`; plan registry + entitlements service
+(the only feature gate — direct plan checks are lint-banned), structure-B recurring billing
+through `PaymentGatewayPort` with auto e-invoicing, dunning → downgrade-that-never-ransoms,
+"Destacado" placement rules. Emits `subscription.*`. Gated on Milestone 2 (business 11).
+
+## 26. safety (Ring 0, global)
+
+Fully specified in **doc 21 §6**. Owns `reports`, `user_blocks` — the user-facing
+notice-and-action machinery (Ley 10946): report user/listing/message with reason, admin
+pipeline with reasoned outcomes and reporter notification, blocks enforced across feed, chat,
+applications, waitlists, and seeker profiles via `safety.isBlocked`. Emits
+`report.resolved`, `safety.threshold_reached`.
 
 ---
 

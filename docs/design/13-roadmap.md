@@ -60,7 +60,9 @@ Sizing: S = ≤1 day, M = 2–3 days, L = ~1 week (for a junior with these docs;
 archived hidden from feed. · 2.2 Presigned image upload flow (M; 03 ADR-11) — AC: e2e against
 local driver; size/mime caps. · 2.3 PostGIS column + geo query in `properties.queries.ts` (M;
 05 §6) — AC: within-radius integration test with seeded coords. · 2.4 Analytics counters as
-idempotent event listeners (S; 07 §4).
+idempotent event listeners (S; 07 §4). · 2.7 House rules structured fields + detail rendering
+(S; 21 §7). · 2.8 Verified-listing flow: request → ops checklist → badge/revoke-on-edit (M;
+21 §8).
 
 ## Epic 3 — Discovery (feed + swipes + matches + chat)
 
@@ -74,7 +76,12 @@ within-radius + distance-order integration test. · 3.7 geo module: POI table + 
 Overpass import + typeahead + admin curation; `UNIVERSITY` seeded and alias-curated (L; 20
 §3–5) — AC: import idempotent; "TEC" resolves; curated fields survive refresh. · 3.8 Real map
 in filter sheet: MapLibre + OSM tiles + attribution, draggable pin, resizable circle, POI
-markers/search, "buscar en esta zona" (L; 20 §2,5).
+markers/search, "buscar en esta zona" (L; 20 §2,5). · 3.10 Saved searches + event-driven
+alerts + daily digest (M; 21 §2) — AC: hit dedup per search×listing; digest batches. · 3.11
+Property viewings: propose/confirm/counter, `VISIT_PROPOSAL` card, reminders job, no-show
+(M; 21 §1) — AC: reminder job run twice → one notification. · 3.12 Compare favorites:
+batch-get + attribute matrix from registry attributes (S; 21 §3). · 3.13 Price heatmap
+endpoint + layer (S; 20 §5).
 
 ## Epic 4 — The rail (leases + payments) — the senior-attention epic
 
@@ -111,7 +118,10 @@ markers/search, "buscar en esta zona" (L; 20 §2,5).
 scores. · 5.2 Ratings with anti-retaliation publishing (M; 07 §11). · 5.3 Disputes hardening +
 evidence uploads + structured resolutions (M; 07 §12). · 5.4 Notification rules table + in-app
 channel + device-token registry; push channel behind `PUSH_ENABLED` (M; 07 §15). · 5.5 Audit via
-queued writes + PII-redacted diffs + admin query API (M; 07 §16).
+queued writes + PII-redacted diffs + admin query API (M; 07 §16). · 5.6 Safety module:
+block + report intake, admin pipeline with reasoned outcomes + reporter notification,
+`isBlocked` enforcement hooks across feed/chat/applications (M; 21 §6) — AC: blocked pair
+invisible both ways; report SLA timers.
 
 ## Epic 6 — Services + launch hardening (AI removed — deferred to national scale)
 
@@ -144,6 +154,17 @@ with Epic 2 to avoid touching `properties` twice.
 | 7.6 | roommates module: applications + per-occupant reviews + veto chain + consent-first visibility + expiry job | L | 18 | Unanimous-approval logic property-tested (occupant set changes mid-review); occupant veto final; landlord cannot write visibility |
 | 7.7 | maintenance module: tickets + attachments (presign, EXIF strip) + state machine + `MAINTENANCE_TICKET` chat card | L | 19 | Transition table 100% covered; reopen window enforced; card renders from live ticket status |
 | 7.8 | maintenance visits: scheduling + confirm/propose + reminder, auto-close, SLA-nudge jobs + en-route push | M | 19 §4–6 | Each job run twice → one notification (dedup anchors); en-route → tenant push e2e; NO_SHOW path recorded |
+| 7.9 | seeker-tools wave: roommate-seeker profiles + feed + mutual match → `ROOMMATE_SEEKER` chat; rental CV + revocable share link; guarantor invite/consent flow + `requiresGuarantor` filter | L | 21 §4–5 | Seeker match opens conversation; CV link revocation immediate; guarantor data entered only by the guarantor (consent test) |
+
+## Epic 8 — Monetization (doc 22; gated on Milestone 2 — business 11)
+
+| # | Task | Size | Spec | AC |
+|---|---|---|---|---|
+| 8.1 | Plan registry + entitlements service + lint ban on direct plan checks | M | 22 §1 | Feature code passes only through `entitlements.can/limit`; cache invalidates on subscription events |
+| 8.2 | Subscription lifecycle + PSP recurring adapter (B1) + webhook plumbing | L | 22 §2–3, B12 §3 | One charge per subscription+period (idempotency test); e-invoice issued per charge or activation blocks |
+| 8.3 | Dunning job + PAST_DUE grace + downgrade-without-ransom (pause listings, never data) | M | 22 §3 | Retry schedule verified; downgrade keeps conversations/history accessible |
+| 8.4 | Featured placement: capped feed injection + mandatory "Destacado" label | M | 22 §4 | Label always renders; hard filters never expanded |
+| 8.5 | Admin: comps, subscription board, dunning overview (audited) | S | 22 §5 | Comp flag bypasses PSP, expires |
 
 ---
 
