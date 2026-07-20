@@ -1,8 +1,11 @@
 # bilo — Software Requirements Specification (ERS)
 
-**Version 1.2 — 2026-07-18 · Status: DRAFT for product review**
+**Version 1.3 — 2026-07-18 · Status: DRAFT for product review**
 *(v1.1: added GEO module — anchored map search & OSM POI catalog, FR-GEO-001…015, per D20)*
 *(v1.2: added FR-APP-009 (conditional ads, C) and §5.1 release gates per the bootstrap plan, B11)*
+*(v1.3: product review Y/N pass — 46 new FRs: VIS (viewings), SAFE (report/block), MON
+(subscriptions) modules + additions to USER, PROP, DISC, MATCH, ROOM, LEASE, PAY, NOTIF, GEO,
+per D21/D22)*
 
 This is the complete, numbered inventory of what bilo must do. Its job is to put the project's
 scope **into numbers**: every functional requirement (FR) has an ID, a priority, and a source,
@@ -97,6 +100,9 @@ modes (FE role switch "Cliente/Admin"):
 | FR-USER-008 | Help & support entry point (contact channel + FAQ) | S | FE:Profile, B07 |
 | FR-USER-009 | Terms & privacy documents viewable in-app | M | FE:Profile, B05 |
 | FR-USER-010 | Admin: list/search users, change roles, ban/suspend (audited) | M | D07§2 |
+| FR-USER-011 | Rental CV (hoja de vida): opt-in aggregation of badges, trust score, tenancy count, payment punctuality; user controls section visibility | S | D21§5 |
+| FR-USER-012 | Rental CV shareable as a read-only page behind a revocable token (no contact data/documents); view counts logged | S | D21§5 |
+| FR-USER-013 | Post-lease landlord reference statements attachable to the rental CV (optional, distinct from ratings) | S | D21§5 |
 
 ### 3.4 PREF — Tenant preferences (D07§3)
 
@@ -150,6 +156,10 @@ modes (FE role switch "Cliente/Admin"):
 | FR-PROP-017 | Listing creation requires/creates a rentable unit (inline single-unit flow for simple landlords) | S | D15§8 |
 | FR-PROP-018 | AI price suggestion for the zone/size while publishing | W | FE:Publish, B02§6 |
 | FR-PROP-019 | AI demand prediction on preview ("8–12 solicitudes la primera semana") | W | FE:Publish |
+| FR-PROP-020 | House rules on listings: structured fields (quiet hours, guests, smoking, pets detail, cleaning) + ≤500-char free text; rendered on detail and pinned in roommate screening chats | M | D21§7 |
+| FR-PROP-021 | Verified-listing flow: landlord requests → ops checklist (photo originality, address, authority vs Registro) → badge or reasoned rejection; badge revoked on substantive edits until re-checked | S | D21§8 |
+| FR-PROP-022 | Verified-listing badge displayed on cards/detail and available as a feed filter | S | D21§8 |
+| FR-PROP-023 | Utilities breakdown on listings: what's included + estimated monthly costs for the rest | C | D21§10 |
 
 ### 3.7 DISC — Discovery: feed & swipes (D07§5)
 
@@ -167,6 +177,11 @@ modes (FE role switch "Cliente/Admin"):
 | FR-DISC-010 | Empty-deck state explains why and offers filter adjustment | M | FE:Discover |
 | FR-DISC-011 | Feed header shows result count + active zone; drag shows APARTAR/PASAR affordances | M | FE:Discover |
 | FR-DISC-012 | Feed responses cacheable per user (noop cache at Stage 1, Redis at Stage 2) | C | D08§3 |
+| FR-DISC-013 | Saved searches: create/edit/delete named searches capturing the full filter set incl. anchor+radius/POI; cap 10 per user | M | D21§2 |
+| FR-DISC-014 | New/updated listings matching a saved search trigger alerts: INSTANT push per hit or DAILY digest, deduped per search×listing | M | D21§2 |
+| FR-DISC-015 | Alert management: per-search cadence (INSTANT/DAILY/OFF), mute, alert deep-links naming the matched search | S | D21§2 |
+| FR-DISC-016 | Compare 2–3 favorites side-by-side: attribute matrix with differences highlighted | S | D21§3 |
+| FR-DISC-017 | Compare matrix includes binary amenities as ✓/✗ rows (parking, pets, furnished, …), price/m², distance to anchor, landlord rating + badges | S | D21§3 |
 
 ### 3.8 MATCH — Solicitudes & matches (D07§6)
 
@@ -181,6 +196,9 @@ modes (FE role switch "Cliente/Admin"):
 | FR-MATCH-007 | Pending matches expire after 14 days (job) to keep the inbox honest | S | D07§6 |
 | FR-MATCH-008 | Both parties see their matches list, role-aware | M | D07§6 |
 | FR-MATCH-009 | Applicant sees solicitud status reflected in the listing's process stage | S | FE:PropertyDetail |
+| FR-MATCH-010 | Listings may require a guarantor (`requiresGuarantor`); filterable in both directions (tenants can exclude, landlords declare) | S | D21§5 |
+| FR-MATCH-011 | Guarantor attachment is consent-first: applicant sends an invite link; the guarantor consents and fills their own profile (optionally running identity verification for a badge) — the applicant never enters third-party data | S | D21§5, D-legal-04 |
+| FR-MATCH-012 | Applications show guarantor status to the landlord ("fiador: attached ✓/verified"); details visible only after acceptance into conversation | S | D21§5 |
 
 ### 3.9 WAIT — Waiting lists (D17)
 
@@ -216,6 +234,11 @@ modes (FE role switch "Cliente/Admin"):
 | FR-ROOM-011 | Occupant move-out voids their pending reviews; capacity filling expires other applications | S | D18§3,6 |
 | FR-ROOM-012 | Daily job expires idle applications (>14d) with day-7 nudges to whoever is sitting on the decision | S | D18§6 |
 | FR-ROOM-013 | Waitlist invites can route into a roommate application when occupant screening is on | S | D18§7 |
+| FR-ROOM-014 | Opt-in roommate-seeker profile: bio, budget range, zones, move-in window, fixed-vocabulary lifestyle tags (sleep, cleanliness, guests, smoking, pets) | S | D21§4 |
+| FR-ROOM-015 | Seeker feed: browse/filter seekers by budget overlap, zone overlap, tags; profiles show public projection + badges | S | D21§4 |
+| FR-ROOM-016 | Mutual seeker like → match → conversation (context ROOMMATE_SEEKER) | S | D21§4 |
+| FR-ROOM-017 | Listings shareable into seeker conversations ("search together" v1) | S | D21§4 |
+| FR-ROOM-018 | Shared-unit expense-split reminders (utilities between roommates) | C | D21§10 |
 
 ### 3.11 CHAT — Conversations & messages (D07§7, D18§5)
 
@@ -257,6 +280,9 @@ modes (FE role switch "Cliente/Admin"):
 | FR-LEASE-013 | Lease history retained for both parties after completion | M | D07§8 |
 | FR-LEASE-014 | Lease renewal flow (new term proposed from existing lease) | C | — |
 | FR-LEASE-015 | AI clause analysis with alerts on contract screen | W | FE:Contracts, B02§6 |
+| FR-LEASE-016 | In-app termination notice (Ley 7527): either party gives formal notice on an active lease; recorded with full evidence pack; effective date auto-computed (+3 months) | M | D21§9 |
+| FR-LEASE-017 | Termination notice generates a constancia PDF for both parties, notifies the counterparty on every enabled channel, and suppresses auto-renewal | M | D21§9 |
+| FR-LEASE-018 | Move-in/move-out photo inspection reports (acta de entrega), acknowledged by both parties; evidence for deposit disputes | C | D21§10 |
 
 ### 3.13 PAY — Payments, ledger & collections (D07§9, B02, B05, D14§3)
 
@@ -287,6 +313,7 @@ modes (FE role switch "Cliente/Admin"):
 | FR-PAY-023 | Landlord exports payment data (CSV) | S | FE:AdminPayments |
 | FR-PAY-024 | Payout request + payouts ledger (Stripe-Connect-class, Phase B) | C | FE:AdminPayments, D14§3 |
 | FR-PAY-025 | Landlord recent-activity feed of payment events | S | FE:AdminPayments |
+| FR-PAY-026 | Payment-history constancia export (PDF) for visas/credit/references | C | D21§10 |
 
 ### 3.14 IDV — Identity verification (D16)
 
@@ -375,6 +402,7 @@ modes (FE role switch "Cliente/Admin"):
 | FR-NOTIF-005 | Email channel behind a flag; channels fail independently (in-app write never fails) | C | D07§15 |
 | FR-NOTIF-006 | Per-user notification preferences | S | FE:Profile |
 | FR-NOTIF-007 | Batching/rate limits on fan-out notifications (e.g., spot-opened) | S | D17§6 |
+| FR-NOTIF-008 | WhatsApp channel (Business API) behind a flag, for critical events only (visit confirmations/reminders, dunning, termination notices); mapping table is the budget control | S | D07§15, D21 |
 
 ### 3.21 AI — Assistant features (D07§14) — **all deferred to national scale (B02§6)**
 
@@ -435,6 +463,42 @@ Technical requirements every module inherits — listed once, tested centrally.
 | FR-GEO-013 | Use device location as the anchor (with permission) | S | D20§1 |
 | FR-GEO-014 | Additional POI categories (schools, hospitals, transit, supermarkets, parks, …) enabled progressively | C | D20§4 |
 | FR-GEO-015 | Travel-time isochrone search ("20 min by bus from campus") | C | D20§6 |
+| FR-GEO-016 | Price heatmap map layer: median price per zone/grid cell, cached daily, suppressed below a minimum sample (≥5 listings/cell) | S | D20§5 |
+
+### 3.25 VIS — Property viewings (D21§1)
+
+| ID | Requirement | Pri | Source |
+|---|---|---|---|
+| FR-VIS-001 | Either party proposes a viewing from a listing conversation (date + arrival window) | M | D21§1 |
+| FR-VIS-002 | Counterparty confirms, declines, or counter-proposes (counter replaces the window) | M | D21§1 |
+| FR-VIS-003 | Viewing renders as a live-status VISIT_PROPOSAL card in chat; transitions post system lines | M | D21§1 |
+| FR-VIS-004 | Reminders to both parties at 24h and 1h before a confirmed viewing (deduped job) | M | D21§1 |
+| FR-VIS-005 | Cancel any time before the window; either party may report NO_SHOW after it (recorded) | M | D21§1 |
+| FR-VIS-006 | Pre-visit safety guidance + one-tap "share visit details" (address, time, landlord public profile) with a contact | S | D21§1, B07 |
+| FR-VIS-007 | Post-visit prompt updates the listing's process stage for the tenant | S | D21§1 |
+
+### 3.26 SAFE — Report & block (D21§6)
+
+| ID | Requirement | Pri | Source |
+|---|---|---|---|
+| FR-SAFE-001 | Block a user: bidirectional invisibility across feed, seeker profiles, waitlists, applications; conversations freeze read-only; no notification to the blocked user | M | D21§6 |
+| FR-SAFE-002 | Report a user, listing, or message with a reason enum (scam, fake listing, harassment, discrimination, off-platform pressure, other) + details + optional evidence | M | D21§6 |
+| FR-SAFE-003 | Report pipeline OPEN→IN_REVIEW→ACTIONED/DISMISSED with reasoned decisions recorded and the reporter notified of the outcome (Ley 10946 notice-and-action); SLA 72h, safety-class 24h | M | D21§6, L-02§2 |
+| FR-SAFE-004 | Block enforcement hooks in every interaction path (feed, message send, application create, waitlist join, seeker feed) | M | D21§6 |
+| FR-SAFE-005 | Repeat-offender aggregation (upheld reports per user) surfaces in admin and emits a threshold event for trust/ban workflows | S | D21§6 |
+
+### 3.27 MON — Subscriptions & entitlements (D22)
+
+| ID | Requirement | Pri | Source |
+|---|---|---|---|
+| FR-MON-001 | Plan registry (FREE/PRO at launch) defining entitlements in code; DB stores only the user's plan | M | D22§1 |
+| FR-MON-002 | Feature gating exclusively through the entitlements service (`can`/`limit`); direct plan checks lint-banned | M | D22§1 |
+| FR-MON-003 | Subscribe/upgrade via PSP recurring billing (structure B); e-invoice with IVA auto-issued per charge — no invoice, no activation | M | D22§3 |
+| FR-MON-004 | Dunning on failed renewal (day 1/3/7) → PAST_DUE grace (7d, entitlements intact) → EXPIRED downgrade to FREE | M | D22§3 |
+| FR-MON-005 | Downgrade never touches existing data or live tenancies: excess listings paused (landlord picks the survivor), conversations/history stay accessible | M | D22§3 |
+| FR-MON-006 | Featured placement ("Destacado"): capped feed injection, always visually labeled, never overrides hard filters | M | D22§4 |
+| FR-MON-007 | Self-serve cancel (runs to period end) and resume; no proration refunds at launch (stated in ToS) | S | D22§2 |
+| FR-MON-008 | Admin: subscription board, manual comps (`compedUntil`, no PSP), dunning overview — audited | S | D22§5 |
 
 ---
 
@@ -468,40 +532,45 @@ Functional requirements by module and priority (counts generated from the tables
 |---|---|---|---|---|---|---|
 | AUTH | Authentication & sessions | 11 | 1 | 0 | 0 | **12** |
 | APP | Client app shell | 6 | 1 | 2 | 0 | **9** |
-| USER | Users & profiles | 6 | 4 | 0 | 0 | **10** |
+| USER | Users & profiles | 6 | 7 | 0 | 0 | **13** |
 | PREF | Tenant preferences | 5 | 1 | 0 | 0 | **6** |
 | INV | Rentable inventory | 0 | 13 | 0 | 0 | **13** |
-| PROP | Listings & publishing | 13 | 4 | 0 | 2 | **19** |
-| DISC | Discovery & swipes | 10 | 1 | 1 | 0 | **12** |
-| MATCH | Solicitudes & matches | 7 | 2 | 0 | 0 | **9** |
+| PROP | Listings & publishing | 14 | 6 | 1 | 2 | **23** |
+| DISC | Discovery & swipes | 12 | 4 | 1 | 0 | **17** |
+| MATCH | Solicitudes & matches | 7 | 5 | 0 | 0 | **12** |
 | WAIT | Waiting lists | 0 | 12 | 0 | 0 | **12** |
-| ROOM | Roommates | 0 | 13 | 0 | 0 | **13** |
+| ROOM | Roommates & seekers | 0 | 17 | 1 | 0 | **18** |
 | CHAT | Conversations | 10 | 4 | 1 | 1 | **16** |
-| LEASE | Contracts | 11 | 2 | 1 | 1 | **15** |
-| PAY | Payments & collections | 17 | 5 | 3 | 0 | **25** |
+| LEASE | Contracts | 13 | 2 | 2 | 1 | **18** |
+| PAY | Payments & collections | 17 | 5 | 4 | 0 | **26** |
 | IDV | Identity verification | 1 | 8 | 1 | 0 | **10** |
 | TRUST | Trust score | 4 | 1 | 0 | 0 | **5** |
 | RATE | Ratings & reviews | 4 | 1 | 0 | 0 | **5** |
 | DISP | Disputes | 4 | 1 | 0 | 0 | **5** |
 | MAINT | Maintenance tickets | 0 | 16 | 0 | 0 | **16** |
 | SERV | Services marketplace | 0 | 4 | 1 | 0 | **5** |
-| NOTIF | Notifications | 3 | 3 | 1 | 0 | **7** |
+| NOTIF | Notifications | 3 | 4 | 1 | 0 | **8** |
 | AI | Assistant features | 0 | 0 | 0 | 5 | **5** |
 | ADMIN | Back-office & ops | 3 | 4 | 1 | 0 | **8** |
 | PLAT | Platform & API | 10 | 0 | 0 | 0 | **10** |
-| GEO | Map search & POI | 4 | 9 | 2 | 0 | **15** |
-| **Total FR** | | **129** | **110** | **14** | **9** | **262** |
+| GEO | Map search & POI | 4 | 10 | 2 | 0 | **16** |
+| VIS | Property viewings | 5 | 2 | 0 | 0 | **7** |
+| SAFE | Report & block | 4 | 1 | 0 | 0 | **5** |
+| MON | Subscriptions & entitlements | 6 | 2 | 0 | 0 | **8** |
+| **Total FR** | | **149** | **132** | **18** | **9** | **308** |
 | NFR | Non-functional | 13 | 2 | 0 | 0 | **15** |
 
 **Reading the numbers:**
-- **129 Must requirements** are the Stage-1 launch: the core loop (auth → discover → solicitud
-  → chat → contract → pay) plus trust, disputes, notifications, anchored map search, and the
-  platform floor. They map to roadmap Epics 0–6 (D13).
-- **110 Should requirements** are the launch-adjacent wave — dominated by the five D15–D19
-  features (maintenance 16, inventory 13, roommates 13, waitlists 12, identity 8) plus the POI
-  catalog (9, D20) — mapping to roadmap Epic 7, the Epic 3 geo tasks, and scattered UX polish.
-- **14 Could + 9 Won't** are consciously parked (Stage-2 seams, isochrones, conditional ads,
-  and deferred AI); they cost
+- **149 Must requirements** are the full Stage-1 product: the core loop (auth → discover →
+  viewing → solicitud → chat → contract → pay) plus trust, safety (report/block), saved-search
+  alerts, house rules, notifications, anchored map search, monetization infrastructure, and
+  the platform floor. They map to roadmap Epics 0–8 (D13).
+- **132 Should requirements** are the launch-adjacent wave — the five D15–D19 features
+  (maintenance 16, roommates+seekers 17, inventory 13, waitlists 12, identity 8), the POI
+  catalog (10, D20), and the D21 seeker tools (rental CV, guarantor, compare, WhatsApp
+  channel, verified listings).
+- **18 Could + 9 Won't** are consciously parked (Stage-2 seams, isochrones, conditional ads,
+  move-in inspections, utilities/constancia exports, and deferred AI); they cost
   nothing now because their seams are already in the design.
 - Rule of thumb for sizing: prototype-validated M-requirements average ~0.5–1 dev-day each
   hardened-for-production; greenfield S-requirements (docs 15–19) average ~1–2. That puts
@@ -517,10 +586,10 @@ priorities.
 
 | Gate | Modules / scope | Why gated |
 |---|---|---|
-| **M1 — marketplace launch** (stores, no revenue) | AUTH, APP, USER, PREF, PROP, DISC, GEO, MATCH, CHAT, NOTIF, TRUST (display basics), RATE (read path), PLAT + FR-IDV-010 (student badge) | Zero triggers: no money, no sensitive data, no contracts |
-| **M2 — formalization + first revenue** (S.R.L. + Hacienda) | PAY subset: fee/subscription billing (structure B), landlord subscription features; ADMIN basics | Requires entity, Hacienda registration, e-invoicing |
-| **Trigger-gated (post-M2)** | LEASE (needs L1/L8 counsel memo), IDV cédula flow (needs Ley 8968 consent screens), PAY rent-rail (needs PSP per B12), WAIT/ROOM/MAINT/INV wave, DISP full flow | Each names its own legal/partnership prerequisite |
-| **Parked** | AI (W), isochrones, ads (FR-APP-009 decision rule) | B02 §6 deferral; B11 §2 ads rule |
+| **M1 — marketplace launch** (stores, no revenue) | AUTH, APP, USER, PREF, PROP (incl. house rules FR-PROP-020, verified listings 021–022), DISC (incl. saved searches/alerts 013–015, compare 016–017), GEO, MATCH, CHAT, **VIS**, **SAFE**, NOTIF, TRUST (display basics), RATE (read path), PLAT + FR-IDV-010 (student badge) | Zero triggers: no money, no sensitive data, no contracts |
+| **M2 — formalization + first revenue** (S.R.L. + Hacienda) | **MON** (full module), PAY subset: fee billing (structure B); ADMIN basics | Requires entity, Hacienda registration, e-invoicing |
+| **Trigger-gated (post-M2)** | LEASE incl. termination notice (needs L1/L8 counsel memo), IDV cédula flow + guarantor verification (needs Ley 8968 consent screens), PAY rent-rail (needs PSP per B12), WAIT/ROOM (incl. seeker matching)/MAINT/INV wave, rental CV (needs payment history), DISP full flow | Each names its own legal/partnership prerequisite |
+| **Parked** | AI (W), isochrones, ads (FR-APP-009 decision rule), FR-LEASE-018 / FR-PROP-023 / FR-ROOM-018 / FR-PAY-026 (approved-as-future C items, D21 §10) | B02 §6 deferral; B11 §2 ads rule; product review 2026-07-18 |
 
 ## 6. Change control
 

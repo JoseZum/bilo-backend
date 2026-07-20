@@ -133,6 +133,12 @@ there at the category preset → drag the rim to resize → result count updates
 en esta zona" applies anchor + the ordinary filters (budget, type, pets…). Dropping a pin on
 empty map does exactly the same without a POI. Distance-to-anchor renders on result cards.
 
+**Price heatmap layer** (approved 2026-07-18): an optional map overlay coloring zones by
+median listing price — computed from active listings aggregated per zone/grid cell, cached
+daily, and **suppressed below a minimum sample (≥ 5 listings per cell)** so no individual
+listing's price is inferable from the map. `GET /geo/heatmap?bbox=` returns cells + medians;
+pure read-side projection, no new writes.
+
 ## 6. What this module refuses to do
 
 No routing/directions, no travel-time isochrones (Stage-3 candy; **revisit when** "20 min by

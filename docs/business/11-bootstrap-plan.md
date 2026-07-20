@@ -39,7 +39,7 @@ no Hacienda trigger, no invoicing, no accountant.
 | Decision | Detail |
 |---|---|
 | **Stores** | Google Play ($25 once) + Apple ($99/yr) via **individual developer accounts** — listing shows a personal name until the S.R.L. exists; both stores support transferring the app to the future org account. Budget: **~$124 first year** — the milestone's only unavoidable cash cost. The PWA-first decision (doc 06) stands for the web channel; the store apps can ship as a wrapped build (TWA/Capacitor) of the same frontend |
-| **Feature scope** | ERS marketplace core: AUTH, APP, USER, PREF, PROP (publish + listings), DISC (swipe feed + filters), GEO (map, radius, university POIs), MATCH (solicitudes), CHAT, NOTIF (in-app + push), TRUST (display-only basics), RATE (aggregates read path) — **plus the student-email badge (FR-IDV-010)**. **Excluded on purpose:** leases/contracts, all payments, cédula verification, waitlists/roommates/maintenance (post-M1 wave) |
+| **Feature scope** | ERS marketplace core: AUTH, APP, USER, PREF, PROP (publish + listings + house rules + verified-listing badge), DISC (swipe feed + filters + saved-search alerts + compare), GEO (map, radius, university POIs), MATCH (solicitudes), **VIS (property viewings)**, **SAFE (report & block)**, CHAT, NOTIF (in-app + push), TRUST (display-only basics), RATE (aggregates read path) — **plus the student-email badge (FR-IDV-010)**. **Excluded on purpose:** leases/contracts, all payments, cédula verification, subscriptions (MON — M2), waitlists/roommates/seeker-matching/maintenance (post-M1 wave) |
 | **Why this scope is legally near-zero** | No money handled, no fees charged, no sensitive/biometric data (student badge = university email possession, not identity documents), no contracts generated. The duties that remain: basic Ley 8968 hygiene on ordinary personal data (consent at signup, privacy policy, deletion) — already designed |
 | **Infra** | Free tiers only (app hosting, Postgres, object storage for images, push). The design's ports make this trivial to swap later. Policy: if a service can't be had free at M1 scale, the feature waits |
 | **Success gate** | The doc-03 liquidity metrics on campus #1 (listings live, weekly solicitudes, chat activity) — not revenue |
@@ -71,7 +71,7 @@ revenue) covers the formalization stack. Sequencing (each step gates the next):
 3. **Hacienda activity registration + e-invoicing provider + accountant + patente municipal** — the "before the first colón" stack (~₡50–80k/month once active).
 4. **Store accounts migrate** to the org (Apple org account + DUNS; Play org) — listing shows "bilo".
 5. **Revenue ladder, in order of exposure:**
-   - **R-a. Landlord subscriptions / featured listings** — pure SaaS, no leakage, no money-flow dependency. First revenue on.
+   - **R-a. Landlord subscriptions / featured listings** (design doc 22) — pure SaaS, no leakage, no money-flow dependency. First revenue on.
    - **R-b. Introduction/booking fee** at match time — bilo's own invoiced receivable (structure B).
    - **R-c. Cobro Automático via PSP** — per [doc 12](./12-psp-landscape.md): starts as payment-links/two-charge (B), upgrades to split (C) only with written PSP confirmation (L7).
    - **R-d. Later:** verified-listing fee, services referrals, deposit/guarantee products via licensed partners.
