@@ -91,6 +91,10 @@ on failure.**
 | `maintenance.auto-close` | daily | RESOLVED >7 d without tenant action → CLOSED, day-5 warning (doc 19 §6) |
 | `maintenance.sla-nudge` | hourly | REPORTED past first-response target → nudge landlord (`sla_nudged_at` dedup; doc 19 §6) |
 | `poi.refresh` | weekly per region | Overpass import per enabled POI category; upsert by `(osm_type, osm_id)`, curated fields never clobbered (doc 20 §3) |
+| `visits.reminders` | every 15 min | 24 h / 1 h property-viewing reminders to both parties (`reminder*SentAt` dedup; doc 21 §1) |
+| `alerts.daily-digest` | daily 18:00 | Batches DAILY-cadence saved-search hits into one digest per user (`alert_hits` dedup; doc 21 §2) |
+| `subscriptions.renew-sweep` | daily | Reconciles `current_period_end` vs PSP webhooks; triggers pull-renewals (one charge per subscription+period; doc 22 §3) |
+| `subscriptions.dunning` | daily | Failed-renewal retries day 1/3/7 → PAST_DUE grace → EXPIRED downgrade (doc 22 §3) |
 
 Jobs are plain classes (`@Injectable() RentGenerateJob { run(ctx) }`) registered with the
 scheduler — testable by calling `run()` with a fixed Clock, no cron in tests.

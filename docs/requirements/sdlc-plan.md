@@ -1,6 +1,6 @@
 # bilo — Delivery Process: From Requirement to Code to Test
 
-This is the operating manual for turning the [ERS](./ers.md)'s 262 numbered requirements into
+This is the operating manual for turning the [ERS](./ers.md)'s 308 numbered requirements into
 shipped, tested code without losing track of a single one. It defines the tracker setup, how
 requirements become tickets, the naming conventions that give us end-to-end traceability
 (FR → ticket → branch → PR → test), the workflow states, and the cadence. It is written so the
@@ -54,13 +54,13 @@ need Jira-style reporting.
 - One Project: **"bilo delivery"**, board layout, custom fields: `Module` (ERS module key),
   `Priority` (M/S/C/W), `Epic`, `Size` (S/M/L per D13), `Stage` (1/2/3).
 - Labels mirror module keys (`mod:PAY`, `mod:INV`, …) + `type:story|bug|chore|spike`.
-- Milestones = roadmap epics (Epic 0 … Epic 7, from D13) + `Launch gate`.
+- Milestones = roadmap epics (Epic 0 … Epic 8, from D13) + `Launch gate`.
 
 ## 3. Structure: how requirements group into work
 
 ### Epics = ERS modules (with the roadmap as sequencer)
 
-Each ERS module (§3.1–3.23) becomes one tracker epic, permanently linked to its design doc.
+Each ERS module (§3.1–3.27) becomes one tracker epic, permanently linked to its design doc.
 The **roadmap (D13) stays the macro sequencer** — it says *when* an epic's stories get
 scheduled; the ERS says *what* the epic must cover; the design doc says *how*. Do not
 duplicate design content into tickets — link it.
@@ -69,12 +69,13 @@ duplicate design content into tickets — link it.
 |---|---|---|---|
 | Foundations | PLAT | D02–D05, D08–D12 | Epic 0 |
 | Identity & accounts | AUTH, USER, PREF, APP | D06, D07§2–3 | Epic 1 |
-| Supply | PROP | D07§4 | Epic 2 |
-| Discovery | DISC, MATCH, CHAT, GEO | D07§5–7, D20 | Epic 3 |
-| The rail | LEASE, PAY | D07§8–9, D14 | Epic 4 |
-| Trust fabric | TRUST, RATE, DISP, NOTIF, ADMIN | D07§10–12,15–16 | Epic 5 |
+| Supply | PROP | D07§4, D21§7–8 | Epic 2 |
+| Discovery | DISC, MATCH, CHAT, GEO, VIS | D07§5–7, D20, D21§1–3 | Epic 3 |
+| The rail | LEASE, PAY | D07§8–9, D14, D21§9 | Epic 4 |
+| Trust fabric | TRUST, RATE, DISP, NOTIF, ADMIN, SAFE | D07§10–12,15–16, D21§6 | Epic 5 |
 | Services & hardening | SERV | D07§13 | Epic 6 |
-| Inventory & community | INV, IDV, WAIT, ROOM, MAINT | D15–D19 | Epic 7 |
+| Inventory & community | INV, IDV, WAIT, ROOM (incl. seekers), MAINT | D15–D19, D21§4–5 | Epic 7 |
+| Monetization | MON | D22 | Epic 8 (M2 gate) |
 | (parked) | AI | D07§14 | deferred (B02§6) |
 
 ### Stories = 1–3 FRs that ship together
@@ -130,7 +131,7 @@ The FR ID travels through every artifact:
 | Traceability matrix | one row per FR, updated in the same PR | see below |
 
 **The matrix** lives at `docs/requirements/traceability.md`, one table per epic, **created
-when that epic's work starts** (a 262-row placeholder file today would be noise). Row format:
+when that epic's work starts** (a 308-row placeholder file today would be noise). Row format:
 
 ```markdown
 | FR | Story | PR | Test(s) | Status |
