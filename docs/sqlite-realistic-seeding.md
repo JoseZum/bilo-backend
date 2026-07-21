@@ -75,7 +75,7 @@ SQLITE_SEED_LIMIT_PER_CITY=250
 ## Limitaciones legales
 
 - No se debe asumir que estos datos pueden utilizarse comercialmente sin revisar la licencia, la atribución y los términos de uso.
-- Si luego quieren usar Encuentra24, Zonaprop u otra fuente comercial, conviene revisar TOS, robots, rate limits y permisos de reutilización antes de automatizar scraping.
+- Antes de utilizar Encuentra24, Zonaprop u otra fuente comercial, se deben revisar sus términos de servicio, reglas de acceso automatizado, límites de solicitudes y permisos de reutilización.
 - Para demo interna y prototipado, Inside Airbnb tiene una postura mucho más clara que un portal clasificado convencional.
 
 ## Uso sugerido dentro de bilo

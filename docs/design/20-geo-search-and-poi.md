@@ -46,7 +46,7 @@ Leaflet + raster tiles — fine fallback, worse gesture feel for the circle inte
 **Revisit when** tile traffic outgrows free tiers (self-host Protomaps: one static file on
 object storage) or map quality complaints appear in a new launch city.
 
-**License rule (non-negotiable):** OSM data and OSM-derived tiles require visible
+**License requirement:** OSM data and OSM-derived tiles require visible
 "© OpenStreetMap contributors" attribution on the map UI, and our imported POI table is an
 ODbL derivative — attribution ships with the feature from day one.
 
@@ -90,8 +90,9 @@ Refresh is upsert-only and **never clobbers curated fields** (`aliases`, `verifi
 
 **Alternatives.** Live Overpass/Nominatim — rejected for the hot path (kept as the *import*
 mechanism, where rate limits don't hurt). Google Places — good data we are contractually not
-allowed to store; per-call cost forever; rejected. Building our own worldwide catalog —
-obviously not; we import the world's crowdsourced one, scoped to where we operate.
+allowed to store; per-call cost forever; rejected. Building a separate worldwide catalog would
+duplicate an existing source and add a permanent maintenance burden, so the design imports the
+OSM catalog only for regions where bilo operates.
 
 ## 4. The category registry — universities first, anything later
 

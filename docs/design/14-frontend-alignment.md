@@ -3,8 +3,9 @@
 Source: the `bilo-frontend` repo (React prototype: onboarding → swipe discovery → property
 detail → chat → contracts → payments, plus a landlord mode with dashboard, publish flow,
 requests inbox, and an admin-payments screen). Its `data-layer.js` already talks to the
-prototype backend and tells us exactly what the client expects. This doc records what the
-frontend teaches us, the contract it consumes, and the deltas it forced into docs 01/07.
+prototype backend and provides concrete evidence of what the client currently expects. This
+document records that evidence, the contract it consumes, and the resulting changes to docs
+01/07.
 
 ## 1. What the frontend establishes as product fact
 
@@ -14,7 +15,7 @@ frontend teaches us, the contract it consumes, and the deltas it forced into doc
 | One user toggles cliente/admin (tenant/landlord) constantly (`onToggleRole` on every main screen) | Dual role is a first-class flow, not an edge case. `users.role` is the primary role, but API responses must work for a user acting in either capacity; role-scoped endpoints (`/matches/mine`, `/leases/mine`) take the acting role from a `?as=tenant|landlord` param defaulting to primary role — cheaper than re-issuing tokens per toggle (amends doc 06 §5 note) |
 | Chat renders three message card types: text, **contract proposal** (title, property, months, monthly, deposit), **payment request** (title, amount, due) | `messages.message_type` enum: `TEXT | CONTRACT_PROPOSAL | PAYMENT_REQUEST | SYSTEM`. Structured payloads in `messages.metadata` JSONB with the exact fields above; a CONTRACT_PROPOSAL message links a draft lease id, a PAYMENT_REQUEST links a payment id — chat cards are *views of domain objects*, never a parallel source of truth |
 | AI participates in chat (inline insight bubbles: "María tiene 4.9★, responde en ~2h") and as a standalone "BILO Asistente" conversation | AI module (doc 07 §14) gains two surfaces: (a) **assistant conversation** — maps to existing `ai_conversations`; (b) **inline chat insights** — server-generated `SYSTEM` messages, rule-based at Stage 1 (trust/rating/response-time facts from DB, no LLM needed), LLM-phrased later behind the same port |
-| Contracts screen shows **clause-analysis flags** (`⚠ Cláusula 14: desalojo en 15 días — inusualmente corta`) | New AI feature: **lease review**. `POST /ai/lease/:id/review` → stores structured flags `{level: WARN|INFO, clauseRef, text}` on the lease (`leases.metadata.flags`). Runs async (queue) when a contract proposal is sent; grounded on the lease text, output schema-validated. Flags are advisory UX — never block signing |
+| Contracts screen shows **clause-analysis flags** (`AVISO — Cláusula 14: desalojo en 15 días — inusualmente corta`) | New AI feature: **lease review**. `POST /ai/lease/:id/review` → stores structured flags `{level: WARN|INFO, clauseRef, text}` on the lease (`leases.metadata.flags`). Runs async (queue) when a contract proposal is sent; grounded on the lease text, output schema-validated. Flags are advisory UX — never block signing |
 | Landlord **AdminPayments screen**: month received/expected, overdue count+amount, per-property tenant payment status (dueDay, paidOn, monthsOnTime, daysLate), **next payout date + amount**, recent activity feed | Two backend features: (a) `GET /payments/landlord-dashboard` aggregate (one SQL query + cache candidate); (b) **payouts are real scope** — see §3 |
 | Saved properties rail (`BILO_SAVED`) | Favorites endpoints join doc 07 §5: `PUT/DELETE /favorites/:propertyId`, `GET /favorites` (table already exists in schema) |
 | Property cards show amenities (wifi, water, electricity, security, pool, gym) beyond the core columns | Canonical `amenities` object inside `properties.metadata` JSONB with these keys; validated by DTO so the feed can filter on them (GIN index if it becomes a hot filter) |
@@ -55,18 +56,19 @@ tenant money and pays landlords out** — marketplace money flow, not pass-throu
 > figures are replaced by "verified received" figures. The `payouts` table and Connect
 > onboarding build only when Phase B starts.
 
-**Decision.** Stripe Connect (Express accounts) at Stage 1 for card rails: charges use
+**Superseded Phase-B design.** If legal and provider constraints later permit Stripe Connect
+(Express accounts), card charges would use
 `transfer_data`/destination charges so Stripe holds and routes funds; our `platform_fee_minor`
 becomes the application fee. New table `payouts (id, landlord_id, amount_minor, currency,
 status, provider_ref, period_start, period_end, created_at)` — a projection of gateway payouts
 + the anchor for the dashboard's "payoutNext/payoutAmount". SINPE settlement (bank-transfer
-rails, Stage 2/3) will need bilo-initiated payouts on the same table; that is precisely why
+rails, Stage 2/3) would use the same table for bilo-initiated payouts; this is why
 `payouts` is ours and not a Stripe API pass-through.
 
-**Consequences:** landlord onboarding gains a KYC step (`POST /payments/connect/onboard` →
-Stripe-hosted flow); a lease cannot activate until its landlord's Connect account can receive
-transfers (new guard in the lease activation transaction); reconciliation (doc 07 §9) extends
-to payouts.
+**Conditional consequences for this Phase-B design:** landlord onboarding gains a KYC step
+(`POST /payments/connect/onboard` → Stripe-hosted flow); a lease cannot activate until its
+landlord's Connect account can receive transfers (new guard in the lease activation transaction);
+reconciliation (doc 07 §9) extends to payouts.
 
 **Manual payments ("Transferencia"):** landlords already collect some rent off-platform. To
 keep the ledger honest (and the trust score fair), landlords can mark a payment
@@ -88,5 +90,6 @@ assumed).
   product's call, not launch-blocking.
 - Stage-2 backlog gains: SINPE Móvil gateway adapter + bilo-initiated payouts.
 
-Everything else the frontend shows (onboarding, publish flow, requests inbox, profile,
-detail screens) maps 1:1 onto modules already specified in doc 07 — no further changes.
+The remaining frontend surfaces reviewed here (onboarding, publish flow, requests inbox,
+profile and detail screens) map to modules specified in doc 07 and do not add design changes in
+this revision.

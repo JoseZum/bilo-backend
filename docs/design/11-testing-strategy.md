@@ -11,7 +11,7 @@ on services+Postgres, a thin e2e crust on the golden flows.
 | **Unit** | domain classes, pure | none (Fixed Clock, in-memory) | ms | State machines (every cell of the transition table, legal and illegal), `RentSchedule` (proration, dueDay 29–31, leap years), `FeeCalculator` (property-based: split always sums), `TrustScoreCalculator`, policies |
 | **Integration** | application service + real Postgres | **Testcontainers** Postgres (real PG 16, migrations applied), mock ports | ~100ms | Transaction boundaries, constraint behavior (duplicate swipe → 409), optimistic-lock retries, the full charge sequence with a scripted mock gateway (success / failure / crash-between-Tx-A-and-B / duplicate webhook) |
 | **Contract** | every adapter of every port | adapter-specific (Redis container, Stripe stubs) | varies | One suite per port, run against all adapters (doc 08 §1) — this is what makes env-var swaps trustworthy |
-| **E2E** | HTTP → DB, app booted with mock external adapters | Testcontainers | s | The golden path: oauth(mock)→preferences→property→feed→swipe→match→accept→chat→lease→sign→pay→trust changed; plus authz denial cases per module (tenant can't touch another user's lease) |
+| **E2E** | HTTP → DB, app booted with mock external adapters | Testcontainers | s | The main flow: oauth(mock)→preferences→property→feed→swipe→match→accept→chat→lease→sign→pay→trust changed; plus authz denial cases per module (tenant can't touch another user's lease) |
 
 No mocking Prisma in integration tests — mocked-DB tests pass while constraints fail in
 production; Testcontainers makes real-PG tests cheap enough to be the default.
@@ -30,7 +30,7 @@ production; Testcontainers makes real-PG tests cheap enough to be the default.
 ## 3. CI gate (blocking, in order, target < 10 min)
 
 1. `tsc --noEmit` (strict)  2. ESLint (includes boundary + banned-API rules)
-3. Unit + integration + contract  4. E2E golden path  5. `prisma migrate diff` drift check
+3. Unit + integration + contract  4. E2E main flow  5. `prisma migrate diff` drift check
 6. `.env.example` ↔ config-schema sync check
 
 Coverage is *reported* (trend), not *gated* — a gate breeds assertion-free tests. Review owns

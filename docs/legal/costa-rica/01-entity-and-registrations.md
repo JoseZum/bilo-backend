@@ -1,12 +1,10 @@
-# 01 — Entity & Registrations (Costa Rica)
+# 01 — Constitución y registros en Costa Rica
 
-*Desk research, not legal advice — see the [folder README](./README.md) disclaimer.*
+> **Advertencia legal.** Investigación documental, no asesoría legal. Consulte la advertencia del [índice de esta carpeta](./README.md).
 
-What it takes — and costs — to exist legally as a company in Costa Rica before the first
-colón of revenue. Written for our actual situation: students, minimal cash, wanting the
-personal-asset shield without burning runway.
+Este documento resume los pasos y costos necesarios para constituir y mantener una empresa en Costa Rica antes de percibir ingresos. El análisis parte de un equipo en etapa temprana que necesita limitar la responsabilidad personal y administrar cuidadosamente sus recursos.
 
-## 1. Why an S.R.L., and why before launch
+## 1. Por qué una S.R.L. y por qué constituirla antes del lanzamiento
 
 Operating as individuals means **personal, unlimited liability** for everything in the threat
 map — a lawsuit or tax debt follows each of us personally. An S.R.L. (Sociedad de
@@ -24,14 +22,14 @@ what happens if someone leaves mid-degree, IP assignment of everything built pre
 post-incorporation into the company). IP assignment matters most — the code in these repos
 must be owned by the S.R.L., not by whichever of us pushed the commit.
 
-## 2. Formation: steps & one-time costs
+## 2. Constitución: pasos y costos iniciales
 
 Formation is a notary act (all CR company formation goes through a notary public) —
 ([process overview](https://www.bizlatinhub.com/10-steps-register-company-costa-rica-incorporation-agent/),
 [cost breakdown](https://adj-cr.com/cuanto-cuesta/constituir-empresa-costa-rica/),
 [El Financiero guide](https://www.elfinancierocr.com/finanzas/como-se-crea-una-sociedad-en-costa-rica-estos-son/FCE6LI6B4VB3PMJUTEVSCMARFE/story/)):
 
-| Step | Cost (approx, 2026) |
+| Paso | Costo aproximado (valores de 2026) |
 |---|---|
 | Notary drafting + incorporation deed (honorarios) | ₡180,000–300,000 |
 | Registro Nacional registration stamps (timbres) | ~₡46,000 |
@@ -42,7 +40,7 @@ Formation is a notary act (all CR company formation goes through a notary public
 Shop the notary fee — student-friendly notaries and online incorporation services exist at
 the lower end. Timeline: roughly 1–3 weeks once the deed is signed.
 
-## 3. The registration checklist (each one is mandatory)
+## 3. Registros aplicables
 
 1. **Registro Nacional** — the incorporation itself (§2). Gets us the *cédula jurídica*.
 2. **Hacienda (Ministerio de Hacienda)** — register as taxpayer in the ATV/TRIBU-CR system
@@ -69,9 +67,9 @@ the lower end. Timeline: roughly 1–3 weeks once the deed is signed.
    [doc 05 §3](./05-money-tax-and-criminal-exposure.md)); revisit if we ever add sales
    brokerage or touch funds.
 
-## 4. Annual fixed costs of existing (the "even if we make ₡0" bill)
+## 4. Costos fijos anuales, incluso sin ingresos
 
-| Obligation | When | Amount (2026 figures) |
+| Obligación | Vencimiento | Monto de referencia (2026) |
 |---|---|---|
 | **Impuesto a Personas Jurídicas** (corporate entity tax) | January 31 | Inactive: ₡69,330 · Active, gross income < 120 base salaries: ₡115,550 · 120–280: ₡138,660 · ≥ 280: ₡231,100 ([BDO 2026](https://www.bdo.cr/es-cr/publicaciones/2026/impuesto-a-las-personas-juridicas-2026), [Hacienda](https://www.hacienda.go.cr/docs/CP042025.pdf)) |
 | Timbre de Educación y Cultura | Feb–Mar | small (₡5,000–18,000 range by capital) |
@@ -84,7 +82,7 @@ the lower end. Timeline: roughly 1–3 weeks once the deed is signed.
 revenue**, plus accountant fees once invoicing starts. That is the real "cost of being
 legal" — cheap insurance against every personal-liability scenario in the threat map.
 
-## 5. Sequencing for broke founders
+## 5. Secuencia recomendada para un equipo en etapa temprana
 
 1. **Now (pre-launch, pre-revenue):** incorporate S.R.L. + founder agreement + IP assignment.
    Register with Hacienda (no revenue = simple filings). Skip CCSS (no payroll).
@@ -94,7 +92,7 @@ legal" — cheap insurance against every personal-liability scenario in the thre
 4. **Only if/when triggered:** PRODHAB (data commercialization — policy: never), ICT
    (short-term stays — policy: not at MVP), SUGEF (sales brokerage/funds — policy: no).
 
-## Questions for counsel
+## Preguntas para asesoría jurídica
 
 - Confirm S.R.L. over S.A. for our cap-table plans (future investors/SAFE-equivalents in CR).
 - Cheapest compliant fiscal domicile / registered-agent setup for a fully remote company.

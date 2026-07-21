@@ -45,7 +45,7 @@ promises.
 ### Stage 0 — Prototype (where we are)
 
 - SQLite, mock login, mock payments, in-process everything.
-- Purpose: demo flows. Nothing here is load-bearing.
+- Purpose: validate the main product flows; this stage is not the production baseline.
 
 ### Stage 1 — Production launch (target of this design)
 
@@ -54,8 +54,8 @@ promises.
   (primary only) → object storage (S3-compatible) for images.
 - **Everything runs in the monolith.** Cache port bound to `NoopCache`. Queue port bound to
   in-process scheduler. Recommendations run as SQL.
-- Real Google + Apple OAuth. Real payment gateway (Stripe) behind the payment port.
-- Full observability from day one (this is not optional at any stage).
+- Real Google + Apple OAuth. A licensed payment provider selected for Costa Rica behind the payment port.
+- Production observability included in the launch scope.
 
 ### Stage 2 — Growth
 
@@ -83,7 +83,7 @@ promises.
   boundaries. Likely first extractions: `messaging` (connection-heavy), `payments`
   (compliance isolation), `recommendations` (already behind a port).
 
-### What we refuse to do early
+### Infrastructure deliberately deferred
 
 - No microservices at Stages 1–3. One deployable, many modules.
 - No Kafka/event streaming before the outbox pattern is insufficient (measured, not assumed).
@@ -103,11 +103,11 @@ promises.
 | Auth | OAuth only (Google + Apple), no stored passwords — all stages |
 | Data protection | Soft delete + audit log; PII export/delete endpoints (GDPR-shaped) from Stage 1 |
 
-## 5. The one-paragraph summary for new hires
+## 5. Working summary
 
 We run a NestJS modular monolith in TypeScript over PostgreSQL. Domain logic is plain classes;
 workflows are explicit state machines; money is integer minor units in a ledger; everything that
 could vary (cache, queue, payments, AI, recommendations, storage) is a port with adapters chosen
 by environment variables, so scaling is mostly flipping config. Modules talk to each other through
 domain events and a small number of explicit service interfaces, never through each other's
-tables. If you understand doc 02 and doc 04, you can safely change anything.
+tables. Docs 02 and 04 provide the context required before changing module boundaries or shared patterns.

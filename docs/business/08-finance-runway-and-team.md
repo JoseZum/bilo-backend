@@ -1,9 +1,9 @@
-# 08 — Finance, Runway & Team
+# 08 — Finance, Operating Horizon & Team
 
 Planning-grade numbers (CR cost base, mid-2026 colón≈$1/₡510). Every figure is an input to
 replace with actuals; the *structure* is the deliverable. Currency: USD for comparability.
 
-## 1. Cost model by phase (monthly burn)
+## 1. Cost model by phase (monthly expenditure)
 
 | Line | Pilot (semester 1) | P1–P2 (CR growth) | Notes |
 |---|---|---|---|
@@ -16,9 +16,9 @@ replace with actuals; the *structure* is the deliverable. Currency: USD for comp
 | Marketing (matrícula blitzes, geofenced social) | $0.5–1k | $2–5k | Concentrated in Feb/Jul windows |
 | **Total** | **≈ $7–10k/mo** | **≈ $18–30k/mo** | |
 
-Pilot semester all-in: **≈ $45–65k**. That is the real "cost to know" whether this works.
+Pilot semester all-in: **≈ $45–65k**. This is the estimated cost of obtaining meaningful pilot evidence.
 
-## 2. Runway scenarios
+## 2. Operating-horizon scenarios
 
 | Scenario | Capital | Gets us to | Verdict |
 |---|---|---|---|

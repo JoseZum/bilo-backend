@@ -1,6 +1,6 @@
 # 03 — Go-To-Market
 
-The operating manual for opening campuses. Modeled on Uber's city playbook — a repeatable,
+The operating guide for opening campuses. Informed by Uber's city expansion process — a repeatable,
 step-numbered process with a local owner and hard gates ([Uber expansion playbook](https://blog.kirnanitechnologies.com/ubers-market-expansion-playbook-launching-city-by-city-at-scale/),
 [strategy study](https://www.cascade.app/studies/uber-strategy-study)) — and Airbnb's two
 founding tricks: harvest the incumbent channel, and do unscalable things that fix conversion
@@ -61,10 +61,11 @@ window, and the payment rail is sold to matched pairs (when both sides already g
 5. **PR**: "startup tica digitaliza la vivienda estudiantil" is an easy national-press story;
    free, credibility with landlords (an older demographic that reads the news).
 
-No broad paid acquisition before P2 — burn discipline is a lesson written in the graves of
+No broad paid acquisition before P2. The reviewed marketplace cases show that acquisition
+spending before retention and liquidity are established creates material risk for
 doc 04.
 
-## 4. The pilot (campus #1, one semester) — what it must answer
+## 4. The pilot (campus #1, one semester) — questions to resolve
 
 The pilot exists to convert doc 01 §2 and doc 02 §3 assumptions into numbers: listings
 reachable, booking-fee willingness, on-rail adoption, match→lease conversion, CAC per side,

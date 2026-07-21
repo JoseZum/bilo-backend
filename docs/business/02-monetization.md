@@ -1,6 +1,6 @@
 # 02 — Monetization
 
-Principle: **monetization follows liquidity.** Every dead-marketplace postmortem in
+Principle: **monetization follows liquidity.** The marketplace postmortems reviewed in
 [doc 04](./04-lessons-winners-and-dead.md) either monetized nothing while burning cash on
 subsidies (RadPad), or monetized in a way that pushed users off-platform (leakage). The model
 below is phased: what is free, what earns, and when each stream switches on.
@@ -39,7 +39,7 @@ liability).
 > (verify in doc 05 L7), auto-mode monetizes via prepaid flat subscription instead — never via
 > a second monthly payment act.
 
-## 2. Why this shape survives the known killers
+## 2. How this model addresses known failure modes
 
 - **Interchange death (RadPad):** RadPad moved rent on card rails, subsidized promos it
   couldn't exit, and died with ~2%+ COGS per transaction ([RadPad postmortem](https://www.doctorofcredit.com/radpad-deal-shut-early-explanation-ceo/), [Wikipedia](https://en.wikipedia.org/wiki/RadPad)). bilo's margins survive by construction: R1 rides
@@ -59,7 +59,7 @@ liability).
   pilots may waive R1 for the first cohort per campus (measured, time-boxed, announced as
   launch pricing) but **never** pays users to transact.
 
-## 3. Unit economics (planning numbers, CR student beachhead)
+## 3. Unit economics (planning numbers, initial CR student segment)
 
 Assumptions to validate: avg student rent ₡220,000 (~$430); avg lease 10 months; booking fee
 30% of one month split 15/15; auto-mode adoption 50% of on-rail leases at 2.5% (1.5% PSP COGS
@@ -72,7 +72,7 @@ inside); flat-subscription adopters equivalent.
 - **Campus at maturity** (UCR-scale, target 1,500 active on-rail leases): ≈ $225k ARR/campus.
 - **CR at maturity** (5 campus zones + general SJ young-professional expansion, ~10k on-rail
   leases): ≈ **$1.5M+ ARR** — the "million-dollar year" is a *Costa Rica alone, no AI, no
-  magic* outcome; regional expansion multiplies it.
+  optimistic outcome; regional expansion would increase it.
 - Break-even sanity: a 4-person team + infra (~$25–35k/month CR cost base) needs ~2,000–2,800
   active leases/year flowing through R1+R2 → roughly wave 1–2 campuses at target liquidity.
   That is the real gate for raising or bootstrapping decisions.

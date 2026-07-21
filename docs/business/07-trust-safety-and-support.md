@@ -1,7 +1,8 @@
 # 07 — Trust, Safety & Support Operations
 
 Trust is the product; this doc is its operations manual. A single viral scam story ("me
-estafaron por una app") can kill a campus launch — the mitigation is designed *before* launch,
+estafaron por una app") can materially damage a campus launch — the mitigation is designed
+*before* launch,
 not after the first incident.
 
 ## 1. Verification ladder (what each badge actually means)
@@ -16,7 +17,7 @@ not after the first incident.
 Rules: badges expire (student: annually; identity: on document expiry); verification state
 changes are audited (design doc 07 §16); the `verificationStatus` field carries the level.
 
-## 2. Fraud & abuse playbook (top scenarios, pre-scripted)
+## 2. Fraud and abuse response guide
 
 | Threat | Defense | Response if it happens |
 |---|---|---|
@@ -51,7 +52,8 @@ in daylight, bring a friend, never pay at a visit.
 - Pilot staffing: founders + 1 ambassador trained on FAQ; scripts in a shared doc from day one
   (they become the help center + future support-hire training).
 - Support volume is a liquidity gate metric (doc 03 §5: <15 tickets/week/1000 users) — support
-  isn't just cost, it's the product-quality thermometer and the #1 source of pilot learnings.
+  is both an operating cost and an indicator of product quality. It is also a primary source of
+  pilot evidence.
   Every ticket gets a category tag; weekly top-3 categories feed the eng backlog.
 
 ## 6. Backend deltas

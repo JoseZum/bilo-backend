@@ -1,12 +1,8 @@
-# 04 — Identity Verification & Data Protection (Ley 8968)
+# 04 — Verificación de identidad y protección de datos
 
-*Desk research, not legal advice — see the [folder README](./README.md) disclaimer.*
+> **Advertencia legal.** Investigación documental, no asesoría legal. Consulte la advertencia del [índice de esta carpeta](./README.md).
 
-Our identity feature (design doc 16: cédula/DIMEX/passport + photos, one government ID = one
-account) is the trust moat — and the highest-fine surface we operate. Costa Rica's **Ley
-8968** and its agency **PRODHAB** regulate everything about it: consent, sensitive data,
-registration, transfers, retention. The good news: the design already made the right
-architectural calls; what's missing is the *paper and screens* layer.
+La función de identidad descrita en el documento de diseño 16 —cédula, DIMEX o pasaporte, fotografías y una cuenta por documento— es un componente central de confianza y una de las áreas de mayor exposición regulatoria. La **Ley 8968** y PRODHAB regulan el consentimiento, los datos sensibles, el registro, las transferencias y la retención. El diseño incorpora medidas de minimización que todavía deben complementarse con textos, procesos y revisión jurídica.
 
 Sources: [Ley 8968 text](https://pgrweb.go.cr/scij/Busqueda/Normativa/Normas/nrm_texto_completo.aspx?param1=NRTC&nValor1=1&nValor2=70975&nValor3=85989),
 [PRODHAB](https://www.prodhab.go.cr/),
@@ -22,10 +18,9 @@ Sources: [Ley 8968 text](https://pgrweb.go.cr/scij/Busqueda/Normativa/Normas/nrm
 - **User rights:** access, rectification, deletion — our existing export/erase endpoints
   (D05 §4, FR-USER-004/007) are the technical half; response duties are the process half.
 - **Security & confidentiality duties** on whoever runs the database.
-- **Enforcement:** PRODHAB fines roughly **US$3,000–18,000 per infraction** plus the power to
-  **suspend database use for 1–6 months** — the operational death penalty for a platform.
+- **Potestad sancionadora:** las fuentes consultadas sitúan las multas de PRODHAB aproximadamente entre **US$3.000 y US$18.000 por infracción** y señalan la posibilidad de **suspender el uso de la base de datos entre uno y seis meses**, lo que podría impedir temporalmente la operación de la plataforma. Los montos y supuestos deben confirmarse con asesoría jurídica.
 
-## 2. The biometric landmine (why we designed it the way we did)
+## 2. Riesgo asociado al tratamiento biométrico
 
 CR practice treats **biometric data used for identification as sensitive data** — the
 strictest category, where processing is prohibited save narrow exceptions and consent burdens
@@ -102,11 +97,11 @@ L9.)
 6. **Transferencias y encargados** — cloud/processors, locations, guarantees.
 7. **Derechos** (acceso, rectificación, supresión, revocación) — how to exercise, response
    times, PRODHAB as authority.
-8. **Seguridad** — measures summary (no security theater specifics).
+8. **Seguridad** — resumen de controles concretos, sin publicar detalles que reduzcan su eficacia.
 9. **Menores** — 18+ only.
 10. **Cambios** — versioning + re-acceptance (mirrors FR-AUTH-009 mechanics).
 
-## Questions for counsel (L9 pack)
+## Preguntas para asesoría jurídica (L9)
 
 - Confirm: manual selfie/cédula review = sensitive-data processing? Exact consent text.
 - Hash retention post-erasure: disclosed-consent sufficiency vs any statutory limit.

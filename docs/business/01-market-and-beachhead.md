@@ -1,6 +1,6 @@
-# 01 — Market & Beachhead
+# 01 — Market & Initial Segment
 
-## 1. Why a beachhead at all
+## 1. Why begin with a narrow segment
 
 Every rental marketplace dies the same first death: no liquidity. Tenants open the app, see
 nothing relevant, never return; landlords list, get no leads, never return. The researched
@@ -31,7 +31,8 @@ Our density unit is **the university campus**.
    ([BIS paper on SINPE Móvil](https://www.bis.org/publ/bppdf/bispap152_d_rh.pdf),
    [Fintech News](https://fintechnews.am/costa-rica/52549/fast-payment-system-sinpe-movil-driving-financial-inclusion-efficiency-in-costa-rica/),
    [BCCR fees](https://www.bccr.fi.cr/en/payments-system/sinpe-fees-and-charges)). A rent rail
-   built on SINPE has near-zero payment COGS — most rent-payment startups die on card
+   built on SINPE has near-zero payment COGS — card interchange has undermined several
+   rent-payment startups
    interchange (~2–2.4% just to move money — see RadPad in doc 04); ours starts structurally
    profitable. The BIS notes request-to-pay and recurring-payment features are on SINPE's
    roadmap — exactly the primitive monthly rent needs.
@@ -59,7 +60,7 @@ A campus "opens" only when the previous one passes the liquidity gates in
 
 ## 4. Expansion arc (the "standard for renting" path, honestly staged)
 
-1. **Beachhead (year 1):** CR student housing, SJ metro campuses. Product = rooms + small
+1. **Initial segment (year 1):** CR student housing, SJ metro campuses. Product = rooms + small
    apartments, student verification, roommate matching, SINPE rent rail.
 2. **Adjacent (year 2):** general young-professional rentals in San José metro — same landlords,
    graduating users, same rail. Then CR-wide.

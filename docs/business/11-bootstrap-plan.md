@@ -8,29 +8,29 @@ milestones. Decisions recorded here on 2026-07-18 (founder call): both app store
 individual accounts; Milestone 1 ships marketplace core + student badge (no contracts, no
 cédula verification, no payments); ads get a feasibility rule, not a commitment.
 
-## 1. The golden rule and the three payment structures (the strategy, in one box)
+## 1. Operating constraint and payment structures
 
 > **bilo can always receive its OWN money (fees, subscriptions — invoiced, taxed).**
 > **bilo can never hold OTHER PEOPLE'S money (rent, deposits).**
 > **A licensed PSP in the middle may hold and split anything — that's what its license is for.**
 
 ```
-✅ A. Direct + verify (Phase A, live first): tenant → landlord via SINPE;
+SUPPORTED — A. Direct + verify (Phase A, live first): tenant → landlord via SINPE;
      bilo records/verifies, never touches funds. Zero licensing exposure.
-✅ B. Two separate charges: rent direct (or PSP→landlord 100%);
+SUPPORTED — B. Two separate charges: rent direct (or PSP→landlord 100%);
      bilo separately charges its fee/subscription. Works with ANY PSP today.
-✅ C. Split settlement (the Uber model): tenant → PSP → rent to landlord,
+CONDITIONAL — C. Split settlement (the Uber model): tenant → PSP → rent to landlord,
      fee to bilo, in one transaction. Cleanest UX; requires a PSP with
      marketplace/split capability — availability in CR is the open question
      (research in [doc 12](./12-psp-landscape.md); partnership item L7).
-❌ D. Pass-through: tenant → bilo's account → landlord. Captación. Never.
+EXCLUDED — D. Pass-through: tenant → bilo's account → landlord. This may constitute captación and is outside the approved model.
 ```
 
 Model **B is the guaranteed fallback**: the business model does not depend on split
 settlement existing in Costa Rica. C is a UX upgrade we adopt if/when a PSP confirms it in
 writing.
 
-## 2. Milestone 1 — "In the stores, growing users, spending nothing"
+## 2. Milestone 1 — Distribution and initial usage on free-tier infrastructure
 
 **Goal:** bilo live on both app stores, full marketplace working, real users, infra bill ≈ ₡0,
 legal exposure ≈ 0. **No revenue is required for M1 — and that is a feature:** no revenue =

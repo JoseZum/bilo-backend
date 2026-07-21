@@ -1,12 +1,8 @@
-# 03 — Tenancy Law & the Hospedaje Boundary
+# 03 — Arrendamiento y límite con el hospedaje
 
-*Desk research, not legal advice — see the [folder README](./README.md) disclaimer.*
+> **Advertencia legal.** Investigación documental, no asesoría legal. Consulte la advertencia del [índice de esta carpeta](./README.md).
 
-The single most product-shaping law in this folder: **Ley 7527 (Ley General de Arrendamientos
-Urbanos y Suburbanos)** governs every housing lease in Costa Rica, and its rules are
-tenant-protective in ways that collide with "semester rental" product intuition. The escape
-hatch everyone reaches for — call it *hospedaje* instead of *arrendamiento* — walks straight
-toward **Ley 9742** (tourism lodging) if done carelessly. This doc maps the terrain.
+La **Ley 7527 (Ley General de Arrendamientos Urbanos y Suburbanos)** condiciona de forma directa el diseño del módulo de arrendamiento. Sus protecciones pueden entrar en tensión con alquileres pensados por semestre. Clasificar una relación como hospedaje en lugar de arrendamiento también puede activar obligaciones bajo la **Ley 9742**, por lo que esta delimitación requiere criterio jurídico.
 
 ## 1. Ley 7527 — the rules that bind our lease module
 
@@ -27,7 +23,7 @@ Sources: [law text](https://www.asamblea.go.cr/sd/Documents/BIBLIOTECADIGITAL/DO
 **Exclusions (art. 7-class):** hotels, pensiones, and *occasional lodging* fall outside
 7527 — the root of the structuring question below.
 
-## 2. What this means for bilo's product honestly
+## 2. Consecuencias para el producto
 
 - The **room-rental student market runs on informality** (semester "contracts" that are
   legally 3-year leases, or nothing written at all). bilo's templates can't repeat the
@@ -39,7 +35,7 @@ Sources: [law text](https://www.asamblea.go.cr/sd/Documents/BIBLIOTECADIGITAL/DO
 - The 3-month-notice reminder, deposit-return timer, and CPI-increase calculator are three
   **cheap features the law hands us** that no informal competitor offers.
 
-## 3. The hospedaje trap — Ley 9742
+## 3. Límite con el hospedaje bajo la Ley 9742
 
 **Ley 9742** (Ley Marco de Hospedaje No Tradicional, in force June 2020) regulates
 *non-traditional lodging*: **tourist-purpose stays in homes/apartments/rooms from 24 hours
@@ -55,7 +51,7 @@ we've structured ourselves into **ICT-registered tourist lodging** instead. The 
 distinguishing element is ***purpose*: 9742 targets "fines turísticos"** (tourism), and
 student housing is residence, not tourism — but "apparent" is not a defense strategy.
 
-**Position until counsel says otherwise (threat T5):**
+**Posición operativa hasta contar con criterio jurídico (riesgo T5):**
 1. bilo lists **housing, minimum stay ≥ 1 month**, marketed as residence (student housing),
    never as vacation/tourist stays — no nightly pricing anywhere in the product.
 2. Lease templates default to the honest 7527 regime; a hospedaje-flavored template ships
@@ -74,7 +70,7 @@ student housing is residence, not tourism — but "apparent" is not a defense st
 - **Habitability disputes:** our maintenance records cut both ways by design (that is a
   feature: honest evidence).
 
-## Questions for counsel
+## Preguntas para asesoría jurídica
 
 - **L1/L8 (P0):** the definitive structuring memo: for each inventory type (room in family
   home with services / room in shared student apartment / whole apartment), which regime

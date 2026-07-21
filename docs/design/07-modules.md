@@ -151,7 +151,7 @@ obligation. The heart of the "standard for renting" thesis.
 
 ## 9. payments (Ring 2) — deep spec
 
-**Purpose.** Move rent, keep the ledger, never lie about money.
+**Purpose.** Move rent while preserving a complete, reconcilable ledger.
 **Owns.** `payments`, `payment_methods`, `payment_transactions`, `payment_events`,
 `idempotency_keys`, `webhook_events`.
 **API.**
@@ -188,8 +188,8 @@ whoever commits first wins, the second becomes a no-op transition).
 off-session via the same sequence; failure → `payment.failed` → notifications dunning sequence
 (day 0, 3, 7) → trust module applies late-payment consequences after grace period.
 **Reconciliation:** nightly job compares yesterday's Stripe balance transactions against our
-ledger by `provider_ref`; any orphan on either side pages a human. This is the "never lie about
-money" enforcement.
+ledger by `provider_ref`; any orphan on either side pages a human. This operationalizes the
+ledger-integrity requirement.
 **Payouts & manual payments:** bilo is a marketplace, not a pass-through — Stripe Connect
 destination charges, a `payouts` table we own, landlord KYC before lease activation, the
 landlord dashboard aggregate endpoint, and manual-payment recording (`PAID` with
@@ -347,7 +347,7 @@ applications, waitlists, and seeker profiles via `safety.isBlocked`. Emits
 
 ---
 
-## Cross-module event flow (the big picture)
+## Cross-module event flow
 
 ```
 swipe.created ─→ properties(analytics)  ─→ reco projection (S3)
@@ -365,7 +365,7 @@ waitlist.invited / roommate.accepted ─→ matches(create, pre-accepted) [same-
 ticket.* ─→ notifications (reminders & en-route via jobs, doc 19 §6)
 ```
 
-If a junior remembers one thing: **solid arrows into Ring 0 are always events; the
+The governing rule is: **solid arrows into Ring 0 are always events; the
 "[same-tx call]" edges are the only sanctioned synchronous cross-module writes, and every one
 is documented here.** The full sanctioned list: match-accept → conversations.create;
 lease-sign → payments skeleton; lease-sign → `inventory.assertLeasable` (lock + invariant

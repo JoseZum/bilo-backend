@@ -2,8 +2,8 @@
 
 PostgreSQL 16 is the system of record. This doc defines the production schema rules, the deltas
 from the prototype schema, and the scaling path. The prototype's `prisma/schema.prisma` (currently
-pointed at SQLite for demos) is the starting shape — its entity model is good; its *types* are not
-production-grade because SQLite forced strings for enums/JSON. That gets fixed first.
+pointed at SQLite for demos) is the starting shape. Its entity model informs the target, while
+its SQLite representations for enums and JSON require replacement in the first migration wave.
 
 ## 1. Prototype → production schema deltas (do these in the first migration wave)
 
@@ -121,11 +121,11 @@ transaction and log the ID before commit).
 
 | Stage | Move | Seam that makes it cheap |
 |---|---|---|
-| 2 | Read replica; route feed/search/analytics reads | `PrismaService` already split into `db` (primary) and `dbRead` handles from day one — Stage 1 binds both to the primary |
-| 2 | PgBouncer / RDS Proxy for connection pooling | Nothing in code assumes session state; already required by "stateless" rule |
+| 2 | Read replica; route feed/search/analytics reads | Split `PrismaService` into `db` (primary) and `dbRead`; Stage 1 binds both handles to the primary |
+| 2 | PgBouncer / RDS Proxy for connection pooling | Preserve the target architecture's stateless request model |
 | 3 | Partition `payments`, `audit_logs`, `notifications`, `messages` by month (`created_at` range) | UUIDv7 + created_at indexes already align with time; partition keys planned now, applied later |
 | 3 | Archive cold partitions to object storage | Append-only tables make this a detach+dump |
-| 4 | Extract module → its tables move with it | Table-ownership rule (doc 02 §3) means no foreign module joins to untangle; cross-module reads already go through service facades |
+| 4 | Extract module → its tables move with it | Enforce the table-ownership rule (doc 02 §3) and route cross-module reads through service facades before extraction |
 
 ## 10. Backups & recovery
 

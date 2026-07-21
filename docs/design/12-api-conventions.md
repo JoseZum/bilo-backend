@@ -49,7 +49,7 @@ The contract every endpoint follows. Deviations are bugs.
   409. Keys expire after 24h.
 - Non-money `POST`s rely on natural idempotency (unique constraints) — documented per endpoint.
 
-## 5. Consistency niceties (decided once, applied always)
+## 5. Consistency conventions
 
 - Filtering: flat query params (`?status=ACTIVE&city=SJO`); ranges as `minPrice/maxPrice`.
 - Sorting: `?sort=-createdAt` (allowlisted fields per endpoint).

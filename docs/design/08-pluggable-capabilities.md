@@ -1,10 +1,11 @@
 # 08 — Pluggable Capabilities (Ports & Adapters)
 
-This is the mechanism behind "Redis is an env var", "Neo4j is an env var", and every other
-scale-by-configuration promise in doc 01. It is one pattern, applied uniformly, to a **closed
+This is the target mechanism behind "Redis is an env var", "Neo4j is an env var", and the other
+scale-by-configuration decisions in doc 01. The prototype contains only some of these ports; Epic
+0 completes the common infrastructure and its enforcement. The pattern applies to a **closed
 list** of capabilities.
 
-## 1. The canonical shape (copy this exactly)
+## 1. Canonical shape
 
 Every capability has four pieces. Example: cache.
 
@@ -61,7 +62,7 @@ Rules that keep this honest:
 - **Ports live with their owner**: infra-generic ports in `src/infra/*`; domain-specific ports
   (recommendation engine, payment gateway, AI) in the owning module's `ports/` dir.
 - **Adapters never leak**: no consumer imports `RedisCache` or `ioredis`. Only the factory knows
-  concrete classes. (`eslint-plugin-boundaries` enforces this.)
+  concrete classes. The target CI configuration enforces this with `eslint-plugin-boundaries`.
 - **Every port ships a contract test** (doc 11): one test suite runs against *all* adapters of a
   port, so `NoopCache` and `RedisCache` provably behave alike where it matters.
 - **Unknown driver value = boot failure** with a message listing valid values. Silent fallback
@@ -97,7 +98,7 @@ Notes on specific ports:
   log); the BullMQ adapter gets retries/backoff/DLQ. Handlers must already be idempotent at
   Stage 1 — that's what makes the driver swap a config change.
 
-## 3. Caching policy (so Redis day is boring)
+## 3. Caching policy
 
 What we will cache when `CACHE_DRIVER=redis` flips on — decided now so code is written against
 `getOrSet` from the start:

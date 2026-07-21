@@ -1,7 +1,7 @@
 # 05 — Legal & Regulatory (Costa Rica)
 
 The research below changes real architecture and business decisions — two prior assumptions
-(Stripe, pooled rent collection) don't survive contact with Costa Rican law. Everything here is
+(Stripe, pooled rent collection) require revision under Costa Rican law. Everything here is
 **desk research to be validated by local counsel before the pilot signs its first lease**; the
 "Action items" table at the end is the engagement brief for that lawyer.
 
@@ -101,7 +101,8 @@ and retention periods for ledger/audit data.
 
 1. Terms of Service + Privacy Policy (ES, CR law).
 2. **Lease templates**: vivienda (7527-compliant) and hospedaje variants — these templates *are*
-   the product's legal moat at the beachhead; nobody in the FB-group market has them.
+   a defensible legal capability in the initial segment; informal Facebook groups generally do
+   not provide comparable safeguards.
 3. Landlord platform agreement (verification consent, fee schedule, anti-discrimination).
 4. Deposit handling terms (Phase A: deposit goes landlord↔tenant directly, bilo records;
    any future escrow waits for Phase B licensing).

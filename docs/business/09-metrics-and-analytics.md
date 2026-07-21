@@ -1,6 +1,6 @@
 # 09 — Metrics & Analytics
 
-If it isn't measured, the gates in docs 02–03 are theater. This doc defines the metric tree,
+The thresholds in docs 02–03 are useful only if their inputs are measured consistently. This document defines the metric tree,
 the event tracking plan (mapping to backend domain events that already exist in the design),
 and the weekly operating cadence.
 

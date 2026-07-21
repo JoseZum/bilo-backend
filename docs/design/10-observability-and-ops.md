@@ -32,7 +32,7 @@ later luxury — you cannot run other people's rent money on `console.log`.
 - **Sentry** for exception tracking (release-tagged, requestId-linked). The global exception
   filter reports every 5xx; 4xx are not errors.
 
-## 4. Alerting (start with exactly these, page-worthy only)
+## 4. Initial alerting set
 
 1. Readiness failing / instance count 0
 2. 5xx rate > 2% over 5 min
@@ -41,7 +41,8 @@ later luxury — you cannot run other people's rent money on `console.log`.
 5. Webhook signature failures spike (attack or key rotation gone wrong)
 6. DB: connections > 80%, replication lag (Stage 2), disk > 75%
 
-Everything else is a dashboard, not a page. Alert fatigue is how real incidents get missed.
+Other signals begin on dashboards and move to paging only when their impact and urgency warrant
+it, limiting alert fatigue.
 
 ## 5. Deployment & runtime
 

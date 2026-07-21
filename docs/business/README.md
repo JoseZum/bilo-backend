@@ -29,7 +29,7 @@ condiciones de revisión.
 | 05 | [Marco legal y regulatorio de Costa Rica](./05-legal-and-regulatory.md) | Cómo afectan al producto la ausencia de Stripe para entidades costarricenses, la custodia regulada de fondos, la Ley 7527 y la facturación electrónica. |
 | 06 | [Producto y MVP piloto](./06-product-and-mvp.md) | Quiénes son los usuarios iniciales, cuáles son los dos recorridos esenciales y qué queda fuera del piloto PWA-first. |
 | 07 | [Confianza, seguridad y soporte](./07-trust-safety-and-support.md) | Cómo verificar identidades, prevenir fraude, proteger visitas, resolver disputas y operar soporte inicialmente por WhatsApp. |
-| 08 | [Finanzas, runway y equipo](./08-finance-runway-and-team.md) | Cuánto puede consumir cada fase, qué hitos justifican inversión y en qué orden incorporar talento. |
+| 08 | [Finanzas, horizonte operativo y equipo](./08-finance-runway-and-team.md) | Cuánto puede consumir cada fase, qué hitos justifican inversión y en qué orden incorporar talento. |
 | 09 | [Métricas y analítica](./09-metrics-and-analytics.md) | Qué métrica norte gobierna el producto, cómo se descompone el árbol de KPI y qué eventos deben instrumentarse. |
 | 10 | [Registro de riesgos](./10-risk-register.md) | Qué riesgos conocemos, quién responde por ellos y qué señal activa cada mitigación. |
 | 11 | [Plan de arranque](./11-bootstrap-plan.md) | Cómo avanzar sin capital: primero marketplace, tiendas, identidad estudiantil e infraestructura gratuita; después entidad legal, Hacienda e ingresos. |

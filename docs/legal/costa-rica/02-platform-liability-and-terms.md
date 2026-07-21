@@ -1,11 +1,8 @@
-# 02 — Platform Liability & Terms (the Airbnb playbook, adapted to CR)
+# 02 — Responsabilidad de la plataforma y términos
 
-*Desk research, not legal advice — see the [folder README](./README.md) disclaimer.*
+> **Advertencia legal.** Investigación documental, no asesoría legal. Consulte la advertencia del [índice de esta carpeta](./README.md).
 
-How do marketplaces avoid owning every problem between their users? Airbnb's legal stack is
-the industry reference; this doc dissects it, filters it through Costa Rican law (which does
-**not** allow everything Airbnb does in the US), folds in the brand-new **Ley 10946**, and
-ends with the skeleton of our own Terms of Service.
+Este documento analiza mecanismos contractuales utilizados por Airbnb, evalúa con cautela su posible aplicación bajo el derecho costarricense e incorpora la Ley 10946. Termina con una estructura preliminar para los términos de servicio de bilo, sujeta a revisión jurídica.
 
 ## 1. The Airbnb playbook, clause by clause
 
@@ -15,22 +12,19 @@ analyses ([ConductAtlas](https://conductatlas.com/platform/airbnb/airbnb-terms-o
 
 | Mechanism | What it does | Does it work in CR? |
 |---|---|---|
-| **Intermediary posture** — "we are a marketplace; hosts, not Airbnb, provide the stay" repeated everywhere: ToS, UI copy, receipts | The single most important protection: Airbnb is not a party to the accommodation contract | ✅ Yes, and Ley 10946 now codifies a tiered intermediary-liability model (§2). Posture must be *real*: the more we control price, terms, and performance, the more we look like a party |
-| **Indemnification** — users defend and hold Airbnb harmless from claims arising from their conduct or user-to-user interactions | Shifts litigation cost to the user at fault | ⚠️ Enforceable between businesses; against *consumers*, aggressive indemnities risk being an abusive clause under Ley 7472 — draft narrow (user's own unlawful conduct), counsel review (L13) |
-| **Releases/waivers** — users release Airbnb from claims arising from stays/experiences ([guest release](https://www.airbnb.com/help/article/2871)) | Cuts off user-vs-platform claims for user-caused harm | ⚠️ Same 7472 limit: cannot waive platform liability for its *own* negligence toward consumers; can disclaim responsibility for *other users'* conduct |
-| **Limitation of liability** — caps damages, excludes consequential damages | Bounds worst-case exposure | ⚠️ Valid inter-business; consumer-facing caps are vulnerable — keep, but don't rely on |
-| **Mandatory arbitration + class waiver** (US users) | Kills class actions | ❌ Do not copy: forcing arbitration in a consumer adhesion contract is a classic abusive clause in CR; consumers keep CNC/court access. Offer *optional* mediation (Ley RAC) instead |
-| **Payments via licensed subsidiaries** ("limited payment collection agent") | Money handling sits in regulated entities | ✅ Same lesson, our version: Phase A funds never touch us; Phase B goes through licensed CR PSPs ([business 05](../../business/05-legal-and-regulatory.md)) |
-| **Verification "as-is"** — ID checks described as limited, no endorsement of any user | Verification without guaranteeing users | ✅ Copy this exactly: the badge means "document checked", never "we vouch for this person" |
-| **AirCover / Host Damage Protection** ([terms](https://www.airbnb.com/help/article/2869)) | A *product* (insurance-backed) that absorbs disputes without admitting legal duty | 🕐 Later: an INS-backed deposit/damage product is the CR analog — Phase B+, never improvised |
-| **Notice-and-takedown + moderation** | Acting on reports sustains the intermediary defense | ✅ Now mandatory-shaped under Ley 10946 (§2) |
+| **Intermediary posture** — "we are a marketplace; hosts, not Airbnb, provide the stay" repeated everywhere: ToS, UI copy, receipts | The single most important protection: Airbnb is not a party to the accommodation contract | Aplicable con reservas: la Ley 10946 establece un modelo escalonado de responsabilidad (§2). La posición debe reflejar la operación real; controlar precio, condiciones y ejecución puede acercar a la plataforma al rol de parte contractual. |
+| **Indemnification** — users defend and hold Airbnb harmless from claims arising from their conduct or user-to-user interactions | Shifts litigation cost to the user at fault | Requiere revisión: frente a consumidores, una indemnidad amplia puede considerarse abusiva bajo la Ley 7472. Debe limitarse a la conducta ilícita propia del usuario y revisarse en L13. |
+| **Releases/waivers** — users release Airbnb from claims arising from stays/experiences ([guest release](https://www.airbnb.com/help/article/2871)) | Cuts off user-vs-platform claims for user-caused harm | Requiere revisión bajo la Ley 7472: no debe excluirse la responsabilidad de la plataforma por negligencia propia frente a consumidores; sí puede delimitarse la responsabilidad por conductas de otros usuarios. |
+| **Limitation of liability** — caps damages, excludes consequential damages | Bounds worst-case exposure | Su validez puede diferir entre relaciones empresariales y de consumo; no debe considerarse una protección suficiente por sí sola. |
+| **Mandatory arbitration + class waiver** (US users) | Kills class actions | No recomendado sin criterio jurídico: el arbitraje obligatorio en contratos de adhesión de consumo puede ser abusivo. Debe preservarse el acceso a la CNC y los tribunales; puede ofrecerse mediación voluntaria bajo la Ley RAC. |
+| **Payments via licensed subsidiaries** ("limited payment collection agent") | Money handling sits in regulated entities | Aplicación propuesta: en la fase A, bilo no custodia fondos; una fase posterior utilizaría proveedores de pago autorizados en Costa Rica ([business 05](../../business/05-legal-and-regulatory.md)). |
+| **Verification "as-is"** — ID checks described as limited, no endorsement of any user | Verification without guaranteeing users | La comunicación debe limitar el alcance de la insignia a la comprobación documental y evitar cualquier garantía sobre la persona. |
+| **AirCover / Host Damage Protection** ([terms](https://www.airbnb.com/help/article/2869)) | A *product* (insurance-backed) that absorbs disputes without admitting legal duty | Alternativa futura: evaluar un producto de depósito o daños respaldado por una aseguradora autorizada, nunca una cobertura informal. |
+| **Notice-and-takedown + moderation** | Acting on reports sustains the intermediary defense | Debe alinearse con el mecanismo de notificación y acción previsto por la Ley 10946 (§2). |
 
-**The meta-lesson:** Airbnb survives not because one clause is magic but because *posture,
-product, and paper agree*: the platform genuinely behaves like an intermediary, the money
-flows through licensed rails, verification is honest about its limits, and there's a funded
-path (insurance) for the disputes that will happen anyway.
+**Conclusión operativa:** la protección no depende de una cláusula aislada, sino de la coherencia entre la posición contractual, el producto y la operación. La plataforma debe comportarse como intermediaria, utilizar canales financieros autorizados, explicar los límites de la verificación y disponer de mecanismos formales para gestionar controversias.
 
-## 2. Ley 10946 — the new e-commerce constitution (our compliance clock)
+## 2. Ley 10946 — gobernanza de servicios digitales y comercio electrónico
 
 Published **June 24, 2026**; in force **~June 2027** (12-month window while regulations
 issue) — i.e., likely *before or right at our launch*. Building compliance in now is nearly
@@ -111,7 +105,7 @@ The consumer-protection baseline that applies from day one
 12. **Modificaciones, terminación, ley aplicable** (CR law, CR courts) — versioned
     acceptance (FR-AUTH-009).
 
-## Questions for counsel
+## Preguntas para asesoría jurídica
 
 - L10 (10946 gap review once regulations publish), L11 (retracto on fees), L13
   (indemnity/limitation clauses vs 7472) — see [README](./README.md) table.

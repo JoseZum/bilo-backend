@@ -83,8 +83,8 @@ long-lived JWTs: unrevocable. The hybrid is the standard because it's the right 
 3. Implement `refresh_tokens` storage + rotation (prototype signs refresh JWTs but doesn't store
    or rotate — not production-grade).
 4. Gate `mock-login` behind `AUTH_ALLOW_MOCK` with production boot rejection.
-5. Keep: global `JwtAuthGuard` as `APP_GUARD`, `@Public()`, `@CurrentUser()`, `@Roles()` +
-   `RolesGuard` — this part of the prototype is exactly right.
+5. Keep the global `JwtAuthGuard` as `APP_GUARD`, together with `@Public()`, `@CurrentUser()`,
+   `@Roles()` and `RolesGuard`; the prototype already provides this foundation.
 
 ## 5. Authorization
 
@@ -114,7 +114,7 @@ if (!LeasePolicy.canView(user, lease)) throw new ForbiddenException();
 No RBAC engine, no permission tables, no CASL — until we have configurable per-org permissions
 (Stage 3+ B2B), static policy classes are clearer, faster, and greppable.
 
-## 6. Security hardening checklist (Stage 1, non-negotiable)
+## 6. Security hardening checklist (required for Stage 1)
 
 - `helmet`, strict CORS allowlist (`FRONTEND_URL`+ mobile schemes), HTTPS only behind LB.
 - Rate limits: `auth/*` endpoints 10/min/IP; global sane default (doc 12 §6).

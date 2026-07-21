@@ -123,7 +123,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-El bootstrap sincroniza el schema y carga datos de demostración cuando la base está vacía. El servicio queda disponible en:
+El proceso de inicio sincroniza el esquema y carga datos de demostración cuando la base está vacía. El servicio queda disponible en:
 
 | Recurso | URL |
 | :-- | :-- |

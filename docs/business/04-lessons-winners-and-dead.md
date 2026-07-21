@@ -1,4 +1,4 @@
-# 04 — Lessons: Winners & Dead Startups
+# 04 — Lessons from Comparable Companies
 
 Researched case studies, each ending in the **specific bilo decision it drives**. Sources
 linked inline; where the record is thin or contested, that's said out loud.
@@ -53,7 +53,7 @@ owns the recurring rent rail (R2) and the domestic market they never cracked.
 
 ---
 
-## The dead — and what killed them
+## Companies that failed — and the contributing factors
 
 ### RadPad (rent payments, †2017/2021) — the closest corpse to our thesis
 
@@ -102,10 +102,10 @@ inventory**. We are matchmaking + trust + rails. Zero balance-sheet housing risk
 escrow is segregated flow-through, never working capital. If co-living demand appears, we serve
 it as listings, not as an operator.
 
-### The general graveyard pattern
+### Patterns shared by failed companies
 
-Across CB Insights' post-mortem corpus, the recurring killers are: no market need, ran out of
-cash (burn > model), wrong team fights, out-competed, and pricing/cost-structure failure
+Across CB Insights' post-mortem corpus, the recurring causes are: insufficient market need,
+cash depletion, team conflict, competitive pressure, and pricing or cost-structure failure
 ([CB Insights](https://www.cbinsights.com/research/startup-failure-post-mortem/)). Marketplace-
 specific: monetizing before liquidity, subsidizing liquidity you can't retain, and letting the
 recurring relationship walk off-platform ([leakage prevention](https://www.sharetribe.com/academy/how-to-discourage-people-from-going-around-your-payment-system/)).
@@ -116,13 +116,13 @@ these companies lacked.
 
 ---
 
-## The one-table summary
+## Comparative summary
 
-| Grave/crown | Lesson | Where it's encoded |
+| Case | Lesson | Where it's encoded |
 |---|---|---|
-| Airbnb 👑 | Unscalable trust work wins cold starts | GTM §2 (photos, founder-led onboarding) |
-| Uber 👑 | Expansion is a gated process, not enthusiasm | GTM §5 gates; campus=city |
-| Uniplaces 👑 | Booking-commission works for student housing | Doc 02 R1 |
-| RadPad ☠ | Payment COGS + gray hacks + broken payments kill | SINPE-first; promo rules; ledger obsession |
-| Homejoy ☠ | Discounts buy churn; leakage eats recurring biz; peripheral software saves nothing | No-subsidy rule; on-rail-only value; AI deferral |
-| HubHaus/Campus/WeLive ☠ | Inventory liability is a different (worse) business | Never own inventory — permanent rule |
+| Airbnb | High-touch trust work can resolve an initial marketplace cold start | GTM §2 (photos, founder-led onboarding) |
+| Uber | Expansion follows a repeatable, threshold-based process | GTM §5 gates; campus=city |
+| Uniplaces | Booking commission is viable in student housing | Doc 02 R1 |
+| RadPad | Payment COGS, legally questionable acquisition tactics, and payment failures compound risk | SINPE-first; promo rules; ledger discipline |
+| Homejoy | Discounts can attract low-retention demand; off-platform migration weakens recurring revenue | No-subsidy rule; on-rail-only value; AI deferral |
+| HubHaus/Campus/WeLive | Inventory ownership creates a materially different risk profile | Never own inventory — permanent rule |

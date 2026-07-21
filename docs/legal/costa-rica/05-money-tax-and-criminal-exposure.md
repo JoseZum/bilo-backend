@@ -1,14 +1,10 @@
-# 05 — Money, Tax & Criminal Exposure
+# 05 — Dinero, impuestos y exposición penal
 
-*Desk research, not legal advice — see the [folder README](./README.md) disclaimer.*
+> **Advertencia legal.** Investigación documental, no asesoría legal. Consulte la advertencia del [índice de esta carpeta](./README.md).
 
-The short version of "how do we not end up broke or in jail": there are exactly two realistic
-jail vectors for a platform like ours — **handling other people's money without a license**
-and **tax fraud** — plus one heavy regulatory regime (AML) we stay out of by scope. All three
-are avoidable by design decisions we have already made; this doc writes down why they stay
-avoided.
+Este documento examina tres áreas que requieren controles expresos: la custodia no autorizada de fondos de terceros, el incumplimiento tributario y las obligaciones de prevención de legitimación de capitales. El alcance propuesto reduce esos riesgos por diseño, pero sus conclusiones deben validarse con asesoría jurídica y contable.
 
-## 1. Captación — the money-handling red line (threat T1)
+## 1. Captación y custodia de fondos de terceros (riesgo T1)
 
 Already established in [business 05 §1](../../business/05-legal-and-regulatory.md), restated
 here as the operating rule because it is the single most dangerous mistake available to us:
@@ -18,7 +14,7 @@ client funds in BCCR custody
 ([El Financiero on fintech captación](https://www.elfinancierocr.com/finanzas/las-fintech-pueden-captar-dinero-procuraduria-se/5OSIKE3SXFFP3E3WCDNIELKMNQ/story/),
 [BCCR payment rules](https://www.bccr.fi.cr/marco-legal/DocReglamento/Reglamento_Sistema_Pagos.pdf)).
 
-**Operating rules (non-negotiable, enforced by architecture):**
+**Reglas operativas incorporadas en la arquitectura:**
 1. Rent and deposits flow **tenant → landlord directly** (SINPE). bilo verifies and records;
    `PaymentGatewayPort` binds a verification adapter, not a charging one, in Phase A.
 2. bilo's own fees are **our receivables, invoiced by us** — never deducted from money
@@ -29,17 +25,16 @@ client funds in BCCR custody
 4. Phase B PSP integrations must settle **directly to the landlord** (landlord as
    beneficiary); a PSP that can only settle to bilo is rejected (business 05, L7).
 
-## 2. Tax — boring, mandatory, criminal if ignored (threat T2)
+## 2. Obligaciones tributarias (riesgo T2)
 
 | Duty | Detail |
 |---|---|
 | **IVA 13% on bilo's fees** | Every service fee we charge carries IVA; monthly declarations once registered. (Residential rent itself is IVA-exempt below ~1.5 base salaries — the landlord's issue, not ours; our UI links Hacienda guidance and gives no tax advice) |
 | **Factura electrónica v4.4** | Mandatory e-invoicing ([Sovos](https://sovos.com/es/iva/reglas-fiscales/factura-electronica-costa-rica/), [Deloitte on v4.4](https://www.deloitte.com/latam/es/services/tax/perspectives/cr-comprobante-electronico-4-4-cinco-cambios-relevantes.html)): every fee charge emits a compliant XML invoice via an authorized provider — the `InvoicingPort` (FR-PAY-008) is a launch blocker for monetization, not polish |
 | **Income tax** | Annual declaration; keep books from day one (accountant, [doc 01 §4](./01-entity-and-registrations.md)) |
-| **Withholding traps** | None at MVP scale, but flag: paying foreign contractors/services can trigger withholding duties — ask the accountant before wiring anything abroad |
+| **Retenciones** | Aunque podrían no activarse durante el MVP, los pagos a proveedores o contratistas extranjeros pueden generar obligaciones de retención; deben revisarse con asesoría contable antes de realizar transferencias internacionales. |
 
-Tax fraud (Ley 9416 regime) is the second jail vector; the defense is unglamorous:
-**register before revenue, invoice everything, declare monthly, pay an accountant.**
+El fraude fiscal bajo el régimen de la Ley 9416 puede generar exposición penal. El control operativo propuesto consiste en registrarse antes de percibir ingresos, facturar todas las operaciones, presentar las declaraciones correspondientes y contar con asesoría contable.
 
 ## 3. AML / SUGEF 15 bis — why we're (probably) outside it
 
@@ -89,10 +84,10 @@ authorship proof). The **Firma Digital certificada integration is the natural St
 | Fraud facilitation | Knowingly hosting scam listings | Verification + notice-and-action + moderation records (doc 02) — *diligence documented is diligence provable* |
 
 None of these require money to avoid. They require the fences in the
-[README](./README.md#what-we-refuse-to-do-at-mvp-scope-fences-that-keep-us-safe) and the
+[README](./README.md#límites-del-mvp) and the
 paperwork cadence in [doc 01](./01-entity-and-registrations.md).
 
-## Questions for counsel
+## Preguntas para asesoría jurídica
 
 - L2 (Phase A fee-billing creates no captación/PSP exposure — written confirmation).
 - L12 (rental-only intermediation outside 15 bis — written opinion).

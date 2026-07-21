@@ -7,16 +7,16 @@ millions of users. The classic failure modes are (a) a big-ball-of-mud monolith 
 split, and (b) premature microservices that multiply operational cost by 10 before product-market
 fit.
 
-**Decision.** A single deployable NestJS application composed of strictly-bounded domain modules.
-Module boundaries are treated as if they were service boundaries: enforced dependency rules,
+**Decision.** A single deployable NestJS application composed of bounded domain modules.
+In the target architecture, module boundaries are treated as if they were service boundaries: dependency rules,
 communication via events and explicit interfaces, no cross-module table access.
 
 **Alternatives considered.**
 - *Microservices from day one* — rejected: multiplies deployment, observability, and data-
   consistency work; we lose transactions across domains exactly where we need them most
   (lease + payment creation).
-- *Unstructured monolith ("just src/ and files")* — rejected: cheap now, unpayable later; can
-  never be extracted.
+- *Unstructured monolith ("just src/ and files")* — rejected: reduces initial structure at the
+  cost of making later extraction substantially harder.
 - *Serverless functions* — rejected: cold starts on payment webhooks, poor fit for long-lived
   WebSocket chat later, weaker local dev story.
 
@@ -29,8 +29,8 @@ it end-to-end (Stage 4).
 
 ## 2. Layering inside a module
 
-Every domain module has the same internal shape. Uniformity is a feature: a junior who has seen
-one module has seen all of them.
+Every target domain module follows the same internal shape. A consistent layout reduces the
+context needed to move between modules.
 
 ```
 src/modules/<name>/
@@ -55,11 +55,12 @@ src/modules/<name>/
 | **Domain (rules / state machines)** | Pure logic: transition tables, pricing/fee math, trust-score math | I/O of any kind — no Prisma, no HTTP, no clock reads (clock is injected) |
 | **Ports/adapters** | Interfaces + infra implementations | Domain decisions (an adapter never decides *whether*, only *how*) |
 
-Two rules that are non-negotiable and enforced in code review + lint:
+Two rules govern this layout and will be enforced in code review and lint as the target structure
+is implemented:
 
 1. **Controllers are thin.** If a controller method is longer than ~10 lines, logic is leaking.
-2. **Domain classes are pure.** They take data in, return decisions out. This is what makes the
-   important 20% of the codebase trivially unit-testable.
+2. **Domain classes are pure.** They take data in and return decisions out, which keeps critical
+   rules independently testable.
 
 We deliberately do **not** introduce a separate "repository layer" over Prisma in every module —
 see doc 04 §Rejected patterns for why. The application service calls Prisma directly. Where a
@@ -97,8 +98,9 @@ Modules fall into three rings. Dependencies point **inward only** (→ means "ma
   Other modules get data via the owner's service or by listening to events. (Exception: reporting/
   analytics queries, which are read-only and live in a dedicated `analytics` context.)
 
-These rules are enforced with `eslint-plugin-boundaries` (or `dependency-cruiser`) in CI, not by
-hoping. The config lives in the repo root; violating an arrow fails the build.
+These rules will be enforced with `eslint-plugin-boundaries` (or `dependency-cruiser`) in CI.
+Adding that configuration and its build gate forms part of Epic 0 in doc 13; it is not present in
+the prototype.
 
 ## 4. Request lifecycle (what happens to every HTTP call)
 

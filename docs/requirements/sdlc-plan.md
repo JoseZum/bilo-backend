@@ -24,10 +24,10 @@ Branch + PR               feat/PAY-021-mark-paid-manual → PR body "Implements:
 Tests + review + merge    AC proven at the right test layer; reviewer checks FR coverage
    │
    ▼
-Traceability update       FR status flips in the matrix → scope burndown is real, not vibes
+Traceability update       FR status changes in the matrix → scope progress remains auditable
 ```
 
-One rule above all: **nothing gets built that doesn't trace to an FR, and no FR is "done"
+Governing rule: **nothing gets built that doesn't trace to an FR, and no FR is "done"
 until a merged PR and a test claim it.** Untracked work is invisible work; unproven FRs are
 rumors.
 
@@ -145,7 +145,7 @@ updates its rows — reviewers reject PRs that claim FRs without matrix + test u
 this gets tedious (it will, around Epic 4), a small script greps FR IDs from test files and
 PR history to regenerate the matrix — automate then, not before.
 
-**The payoff:** `grep -c 'Done'` per module = real burndown against the ERS §5 totals; any
+**Result:** `grep -c 'Done'` per module provides measurable progress against the ERS §5 totals; any
 auditor (or future hire) can pick an FR and walk to the exact code and test that implement it.
 
 ## 6. Workflow states & Definition of Done
@@ -157,7 +157,7 @@ Board columns: `Backlog → Ready → In Progress → In Review → Verify → D
   the ticket, don't silently start something else.
 - **In Review** — PR open, CI green. Review checks: AC covered by tests, FR/matrix updated,
   design-doc conformance (state machines, invariants, events per spec).
-- **Verify** — merged to main, exercised end-to-end on the dev/staging deploy (the golden-path
+- **Verify** — merged to main, exercised end-to-end on the dev/staging deploy (the core
   flow it belongs to, not just its unit tests).
 - **Done** — verified + matrix updated.
 
@@ -175,11 +175,11 @@ Each FR's AC lands at the cheapest layer that can actually prove it (D11):
 | Pure logic (schedules, calculators, state machines) | Unit | `RentSchedule` proration property tests (FR-LEASE-007) |
 | Persistence, constraints, transactions | Integration (testcontainers PG) | duplicate identity → constraint (FR-IDV-003) |
 | Endpoint contracts, authz, envelopes | API/e2e | non-owner PATCH → 403 (FR-PROP-009) |
-| Cross-module flows | Golden-path e2e | swipe → solicitud → accept → chat (FR-MATCH-003) |
+| Cross-module flows | Core-flow e2e | swipe → solicitud → accept → chat (FR-MATCH-003) |
 | Jobs | Integration, run-twice | reminder dedup (FR-MAINT-010) |
 | Client UX (M-priority screens) | Component/e2e (Playwright) | swipe deck + interest modal (FR-DISC-005) |
 
-The golden-path e2e (one tenant + one landlord through the whole core loop) is the launch
+The core-flow e2e (one tenant + one landlord through the whole core loop) is the launch
 gate's heartbeat; every Epic 0–6 story that touches the loop extends it.
 
 ## 8. Change flow: when reality disagrees with the spec
@@ -204,8 +204,8 @@ through with a pointer.
 - **Epic close ritual:** matrix rows all Done/Parked → run the epic's AC list end-to-end on
   staging → tag `epic-N-done` → write a 5-line retro note in the epic ticket (what the
   estimate missed — feeds the sizing rule of thumb in ERS §5).
-- **Estimation:** stories carry S/M/L (D13 scale: ≤1d / 2–3d / ~1w). No story points theater;
-  the L that should be split *gets split*.
+- **Estimation:** stories carry S/M/L (D13 scale: ≤1d / 2–3d / ~1w). Story points are omitted;
+  any L item that cannot be reviewed as one coherent change is divided before implementation.
 
 ## 10. Getting started (the first week's checklist)
 

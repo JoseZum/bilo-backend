@@ -1,11 +1,11 @@
 # 06 — Product & Pilot MVP
 
-The design docs specify the full Stage-1 backend. This doc decides **what the pilot actually
-ships** — the ruthless cut — plus personas, journeys, and the mobile-platform decision. The
-rule: the pilot exists to validate doc 01/02 assumptions, and anything not needed for that
-validation is dead weight this semester.
+The design docs specify the full Stage-1 backend. This document defines **what the pilot
+ships**, together with its personas, core journeys, and mobile-platform decision. The pilot
+exists to validate the assumptions in docs 01 and 02; capabilities that do not contribute to
+that validation are deferred.
 
-## 1. Personas (the four that matter at the beachhead)
+## 1. Personas for the initial market
 
 | Persona | Reality | What they need from bilo |
 |---|---|---|
@@ -14,7 +14,7 @@ validation is dead weight this semester.
 | **Small landlord / casa de huéspedes owner** (often 45+, 1–5 rooms near campus) | WhatsApp-native, wary of tech, burned by no-shows and unpaid rent; SINPE user already | Verified-student leads, dead-simple listing (we do it for them), rent punctuality, a human phone number to call |
 | **Multi-property landlord** (5–20 units, semi-professional) | Spreadsheet bookkeeping; will anchor supply if the dashboard saves them hours | Dashboard, payment tracking, contract templates — the future Pro subscriber |
 
-## 2. The two golden journeys (pilot scope = make these two excellent)
+## 2. The two core journeys
 
 1. **Student finds a verified room:** onboard → student-email verify → set budget/zone →
    swipe feed of campus-zone listings → detail (photos, total monthly cost, landlord trust) →
@@ -28,7 +28,7 @@ supports these two or waits.
 
 ## 3. Pilot MVP cut (against the design-doc feature set)
 
-**IN (must be excellent):** OAuth (Google+Apple) + student-email verification · properties with
+**Included in the pilot:** OAuth (Google+Apple) + student-email verification · properties with
 ROOM type + our-photos flow · feed with hard filters + simple ranking (full scored ranking can
 wait — one campus's inventory fits on a few screens) · swipes/matches/chat · lease from template
 (both legal regimes, doc 05 §2) with in-app signature record · **SINPE direct payment with

@@ -1,10 +1,11 @@
 # 13 — Implementation Roadmap
 
-The build order for turning the prototype into the Stage-1 production backend, sliced into
-epics a junior can execute. Each task lists its **spec source** (the doc §) and **acceptance
+The build order for turning the prototype into the Stage-1 production backend, divided into
+independently assignable epics. Each task lists its **spec source** (the doc §) and **acceptance
 criteria (AC)**. Order matters: each epic leaves `main` deployable and demo-able.
 
-Sizing: S = ≤1 day, M = 2–3 days, L = ~1 week (for a junior with these docs; halve for a senior).
+Sizing: S = ≤1 day, M = 2–3 days, L = ~1 week. These are planning estimates and vary with
+experience and repository familiarity.
 
 > **Bootstrap sequencing (business doc 11):** the epics below describe the full Stage-1
 > production build; the bootstrap plan releases them in gated slices. **Milestone 1**
@@ -172,7 +173,8 @@ with Epic 2 to avoid touching `properties` twice.
 
 Redis on (`CACHE_DRIVER`, throttler store, denylist) · BullMQ on (`QUEUE_DRIVER`) · Outbox on
 (`EVENT_BUS`) + relay + prune · read replica + `dbRead` routing · WebSocket chat gateway ·
-match/lease expiry jobs already exist — verify under queue driver · PgBouncer.
+match/lease expiry jobs · PgBouncer. Each item still requires implementation and verification;
+the backlog records intended seams, not completed Stage-2 infrastructure.
 
 Each item is a config flip plus a focused PR; the seams were built in Stage 1. That is the whole
 point of this design.

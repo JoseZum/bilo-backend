@@ -13,7 +13,7 @@ conversations, and the questions to ask are at the end.**
 |---|---|---|---|---|---|
 | **ONVO Pay** ([site](https://onvopay.com/), [docs](https://docs.onvopay.com/en)) | Cards + SINPE/SINPE Móvil | ~1.5%/tx SINPE (reported) | REST + webhooks + sandbox, recurring, WooCommerce/SDKs | To merchant | CR startup, PCI DSS, **SUGEF-registered entity** — exactly the "licensed middle" we want; digital onboarding |
 | **Tilopay** ([site](https://www.tilopay.com/), [WooCommerce listing](https://woocommerce.com/products/tilopay/)) | Cards (V/MC/Amex) + SINPE Móvil | ~2% + $0.35 (reported); no monthly fee | API (integration key/user/password), tokenization, **subscriptions/recurring**, payment links, QR | Daily/weekly/manual to merchant | Central America coverage; 3DS2 + fraud tooling; 100% online affiliation |
-| **GreenPay** ([overview](https://giniem.com/en/ecommerce/pasarelas-de-pago-en-costa-rica/)) | Cards | $15–30/mo + ~3.8% cards; $2 per settlement transfer | API + plugins | Flexible: T+1/weekly/biweekly/monthly | ⚠️ **Auto-applies Hacienda withholdings (~7.07%) on card settlements** — see §3 |
+| **GreenPay** ([overview](https://giniem.com/en/ecommerce/pasarelas-de-pago-en-costa-rica/)) | Cards | $15–30/mo + ~3.8% cards; $2 per settlement transfer | API + plugins | Flexible: T+1/weekly/biweekly/monthly | **Requires review:** reported Hacienda withholdings of ~7.07% on card settlements — see §3 |
 | **LAFISE e-commerce** | Cards | 2% + $0.15 local; ~$135–150 one-time affiliation | Bank gateway | To merchant account | Bank-grade, cheapest per-tx card rate found |
 | **BNCR / PlacetoPay (Evertec)** ([dev portal](https://placetopay.dev/)) | Cards | Bank-negotiated | Evertec platform | To merchant | State-bank channel; heavier onboarding |
 | *(Reference)* PAYCOMET | — | — | True marketplace split (multi-vendor, commission deduction, distribution rules) | — | **Spain/EU only** — listed as proof the product category exists; no CR equivalent found |
@@ -26,7 +26,8 @@ conversations, and the questions to ask are at the end.**
    calls** (§4).
 2. **Structure B works everywhere today.** Recurring billing (Tilopay subscriptions, ONVO
    recurring) means bilo can charge its own fees/subscriptions cleanly the day the S.R.L. +
-   Hacienda stack exists. **Monetization is therefore never blocked by the split question.**
+   Hacienda stack exists. **The split-settlement question therefore does not block all
+   monetization options.**
 3. **PSP onboarding requires a registered merchant** (business/taxpayer). Two consequences:
    - bilo can't integrate any PSP until **M2 step 3** is done (cédula jurídica + Hacienda) —
      the roadmap gating in [doc 11 §4](./11-bootstrap-plan.md) is confirmed from the PSP side.
@@ -68,7 +69,7 @@ The port absorbs all four — this table is why it exists (design 08).
 7. Contractually: confirm funds flow **never** touches bilo's account in any product we use
    (our L2 legal requirement).
 
-**Decision rule:** first provider giving a written *yes* to (1) or a workable (2)+(3) wins
+**Decision rule:** prioritize the first provider giving a written *yes* to (1) or a workable (2)+(3)
 Phase B2/C; if both stall, Phase B1 (our own fees only) proceeds regardless — structure B
 needs nobody's permission but Hacienda's.
 
