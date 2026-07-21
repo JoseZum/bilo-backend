@@ -6,12 +6,19 @@
 
 Backend de una plataforma residencial que reúne búsqueda por afinidad, acuerdos entre inquilinos y propietarios, pagos y reputación en un mismo recorrido.
 
-[![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?style=flat-square&logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![SQLite](https://img.shields.io/badge/SQLite-MVP-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
-[![API](https://img.shields.io/badge/API-REST%20%7C%20OpenAPI-0F766E?style=flat-square)](#superficie-técnica)
+<br>
+
+[![Node.js](https://img.shields.io/badge/Node.js-20-3C873A?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
+
+[![Prisma](https://img.shields.io/badge/Prisma-5-5A67D8?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![SQLite](https://img.shields.io/badge/SQLite-MVP-00A6D6?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+
+<sub>REST API · OpenAPI · JWT · Event-driven modules · Docker Compose</sub>
+
+<br>
 
 **[Recorrido](#un-alquiler-completo-no-solo-un-listado) · [Arquitectura](#arquitectura-del-prototipo) · [Ejecución](#ponerlo-en-marcha) · [Documentación](#mapa-de-documentación)**
 

@@ -1,84 +1,111 @@
-# bilo — Production Backend Design
+<div align="center">
 
-This is the complete technical design for the production-grade bilo backend. It is written so
-that any developer — including a junior joining the team tomorrow — can pick up a module and
-implement it without having to make (or re-litigate) architectural decisions. Every decision in
-these docs comes with its context, the alternatives we considered, the trade-offs we accepted,
-and the condition under which we would revisit it.
+# Diseño del backend de producción
 
-**Business counterpart:** market, monetization, go-to-market, and researched startup lessons
-live in [`docs/business/`](../business/README.md); two of its decisions bind this design — AI is
-deferred to national scale, and the launch niche is Costa Rican university students.
+**Las decisiones técnicas que llevan a bilo del prototipo a una plataforma operable.**
 
-**Requirements counterpart:** the numbered functional-requirements inventory (ERS) and the
-requirement-to-code delivery process live in [`docs/requirements/`](../requirements/README.md);
-the ERS cites these design docs as the normative spec behind each requirement.
+[`bilo`](../../README.md) · [`Negocio`](../business/README.md) · [`Requisitos`](../requirements/README.md)
 
-**The prototype in this repo is the input, not the target.** The current code (NestJS + Prisma on
-SQLite, mock providers, mock-login) validated the product flows. These docs describe what we keep,
-what we replace, and in what order.
+</div>
 
-## How to read these docs
+---
 
-Read in order the first time. After that, each doc stands alone.
+Este directorio contiene el diseño técnico completo del backend de bilo en su camino hacia
+producción. Su propósito es dejar registradas las decisiones que definen el sistema antes de
+implementarlas: el contexto de cada decisión, las alternativas evaluadas, los compromisos
+aceptados y las condiciones que justificarían revisarla. Con este marco, una persona que se
+incorpore al equipo puede asumir un módulo sin tener que reconstruir o volver a discutir sus
+fundamentos arquitectónicos.
 
-| # | Doc | What it answers |
-|---|-----|-----------------|
-| 01 | [Vision & Scale Stages](./01-vision-and-stages.md) | What we're building, the business model, and the 4 scale stages that drive every technical decision |
-| 02 | [Architecture](./02-architecture.md) | Modular monolith, layering rules, module boundaries, request lifecycle |
-| 03 | [Tech Stack Decisions](./03-tech-stack-decisions.md) | Every stack choice as a decision record: NestJS, Prisma, Postgres, and what we said no to |
-| 04 | [Design Patterns](./04-design-patterns.md) | The pattern catalog: which patterns we use, exactly where, and the patterns we explicitly reject |
-| 05 | [Database](./05-database.md) | Production Postgres schema, money handling, IDs, indexing, migration discipline, scaling path |
-| 06 | [Authentication & Authorization](./06-auth.md) | OAuth-only (Google + Apple), token model, refresh rotation, roles |
-| 07 | [Module Specifications](./07-modules.md) | Every domain module: responsibilities, entities, endpoints, events, state machines, classes |
-| 08 | [Pluggable Capabilities](./08-pluggable-capabilities.md) | The Ports & Adapters system: Redis on/off, Neo4j on/off, Stripe, AI — all env-var toggles |
-| 09 | [Events & Background Jobs](./09-events-and-jobs.md) | Domain events, the outbox upgrade path, rent-generation jobs, queues |
-| 10 | [Observability & Operations](./10-observability-and-ops.md) | Logging, metrics, tracing, deployment, health, incident readiness |
-| 11 | [Testing Strategy](./11-testing-strategy.md) | What we test, at which layer, and the CI gate |
-| 12 | [API Conventions](./12-api-conventions.md) | Versioning, pagination, error envelope, idempotency, rate limiting |
-| 13 | [Implementation Roadmap](./13-roadmap.md) | The build order: epics, tasks, and acceptance criteria a junior can execute |
-| 14 | [Frontend Alignment](./14-frontend-alignment.md) | What the bilo-frontend prototype pins down: launch market, wire contract, payouts, chat cards, AI lease review |
-| 15 | [Rentable Inventory](./15-rentable-inventory.md) | The unit hierarchy: rooms in apartments in buildings, the extensible unit-type registry, units vs listings |
-| 16 | [Identity Verification](./16-identity-verification.md) | The verified-profile badge, the unique government-ID record, one-person-one-account, ban semantics |
-| 17 | [Waiting Lists](./17-waiting-lists.md) | Per-listing waiting pools, landlord filters (verified-only, trust), invite → match pipeline |
-| 18 | [Shared Units & Roommates](./18-roommates.md) | Per-slot leases, roommate applications, current-occupant screening & veto, consent-first visibility |
-| 19 | [Maintenance Tickets](./19-maintenance-tickets.md) | In-chat repair tickets: categories, urgency SLAs, media, visit scheduling, reminders, "technician en route" |
-| 20 | [Geo Search & POI](./20-geo-search-and-poi.md) | Anchor-and-radius map search, the OSM-imported POI catalog (universities first), category registry, map/tile decisions |
-| 21 | [Journey Completions](./21-journey-completions.md) | Property viewings, saved searches & alerts, compare, roommate-seeker matching, rental CV, fiador, report & block, house rules, verified listings, termination notice |
-| 22 | [Subscriptions & Entitlements](./22-subscriptions-and-entitlements.md) | The MON module: plan registry, entitlement gating, structure-B recurring billing with auto e-invoicing, dunning, "Destacado" placement rules |
+## Qué existe hoy y qué describen estos documentos
 
-## Design principles (the short version)
+El repositorio contiene actualmente un **prototipo funcional de etapa 0** construido con NestJS,
+Prisma y SQLite. Incluye proveedores simulados y un acceso de demostración; su función es validar
+los recorridos principales del producto. No representa todavía el backend de producción.
 
-These five principles resolve most day-to-day arguments. When in doubt, come back here.
+Los documentos de este directorio definen la **arquitectura objetivo**: qué partes del prototipo
+se conservan, cuáles deben sustituirse y en qué secuencia debe hacerse la transición. Por tanto,
+una capacidad descrita aquí no debe interpretarse automáticamente como una capacidad ya
+implementada en el código actual. El estado y el orden de ejecución están detallados en la
+[hoja de ruta](./13-roadmap.md).
 
-1. **Boring at the core, pluggable at the edges.** The domain core (users, properties, leases,
-   payments) is plain TypeScript classes and Postgres transactions — no magic. Everything that
-   will genuinely vary (cache, recommendations, payment gateway, AI, storage, queue) sits behind
-   a port interface with adapters selected by environment variable.
+La documentación se complementa con dos fuentes que también condicionan el diseño:
 
-2. **A pattern must pay rent.** We use a design pattern only where we can name the concrete
-   variation or failure mode it protects us from. Patterns adopted "because it's enterprise"
-   are rejected in [doc 04](./04-design-patterns.md) with reasons, so nobody re-introduces them
-   by accident.
+- **Negocio.** El análisis de mercado, monetización, salida al mercado y aprendizajes de otras
+  compañías se encuentra en [`docs/business/`](../business/README.md). Dos decisiones son
+  vinculantes para esta arquitectura: la IA se aplaza hasta alcanzar escala nacional y el nicho
+  inicial son estudiantes universitarios de Costa Rica.
+- **Requisitos.** El inventario numerado de requisitos funcionales (ERS) y el proceso que conecta
+  cada requisito con su implementación se encuentran en
+  [`docs/requirements/`](../requirements/README.md). La ERS utiliza estos documentos de diseño
+  como especificación normativa de cada requisito.
 
-3. **The database enforces invariants; code enforces workflows.** Uniqueness, referential
-   integrity, and money consistency live in Postgres constraints and transactions. State
-   transitions live in explicit state-machine classes. Nothing important is enforced only by
-   "we always call it this way."
+## Recorrido de lectura
 
-4. **Design for Stage N, build for Stage now.** Every component names the scale stage at which
-   it must change and the seam through which it changes (see [doc 01](./01-vision-and-stages.md)).
-   We do not build Stage 3 infrastructure at Stage 1 — we build Stage 1 code with Stage 3 seams.
+Para una primera lectura conviene seguir el orden numérico. Después, cada documento puede
+consultarse de manera independiente.
 
-5. **If it isn't observable, it isn't done.** Every module ships with structured logs, metrics,
-   and domain events from day one. Debugging production is a design requirement, not an
-   afterthought.
+| # | Documento | Pregunta que responde |
+|---|-----------|-----------------------|
+| 01 | [Visión y etapas de escala](./01-vision-and-stages.md) | Qué estamos construyendo, cuál es el modelo de negocio y qué cuatro etapas de escala orientan las decisiones técnicas |
+| 02 | [Arquitectura](./02-architecture.md) | Cómo se estructura el monolito modular, sus capas, límites entre módulos y ciclo de una solicitud |
+| 03 | [Decisiones de stack tecnológico](./03-tech-stack-decisions.md) | Por qué se eligieron NestJS, Prisma y PostgreSQL, qué alternativas se descartaron y bajo qué criterios |
+| 04 | [Patrones de diseño](./04-design-patterns.md) | Qué patrones se aplican, dónde aportan valor y cuáles se rechazan expresamente |
+| 05 | [Base de datos](./05-database.md) | Cómo se diseña el esquema de PostgreSQL para producción: dinero, identificadores, índices, migraciones y crecimiento |
+| 06 | [Autenticación y autorización](./06-auth.md) | Cómo funcionarán OAuth con Google y Apple, los tokens, la rotación de refresh tokens y los roles |
+| 07 | [Especificación de módulos](./07-modules.md) | Qué responsabilidades, entidades, endpoints, eventos, máquinas de estado y clases pertenecen a cada dominio |
+| 08 | [Capacidades intercambiables](./08-pluggable-capabilities.md) | Cómo el modelo de puertos y adaptadores permite activar Redis, Neo4j, Stripe o IA mediante configuración de entorno |
+| 09 | [Eventos y tareas en segundo plano](./09-events-and-jobs.md) | Cómo se manejan los eventos de dominio, la evolución hacia outbox, la generación de rentas y las colas |
+| 10 | [Observabilidad y operaciones](./10-observability-and-ops.md) | Qué exige el sistema en logs, métricas, trazas, despliegue, salud y respuesta a incidentes |
+| 11 | [Estrategia de pruebas](./11-testing-strategy.md) | Qué se prueba en cada capa y qué condiciones debe imponer la integración continua |
+| 12 | [Convenciones de API](./12-api-conventions.md) | Cómo se normalizan versionado, paginación, errores, idempotencia y límites de consumo |
+| 13 | [Hoja de ruta de implementación](./13-roadmap.md) | En qué orden se construye el sistema, con épicas, tareas y criterios de aceptación ejecutables |
+| 14 | [Alineación con frontend](./14-frontend-alignment.md) | Qué decisiones fija el prototipo de frontend sobre mercado inicial, contrato de API, desembolsos, tarjetas de chat y revisión de contratos con IA |
+| 15 | [Inventario alquilable](./15-rentable-inventory.md) | Cómo se representan habitaciones, apartamentos y edificios mediante una jerarquía extensible, y cómo se separan unidades de anuncios |
+| 16 | [Verificación de identidad](./16-identity-verification.md) | Cómo se modelan el perfil verificado, la unicidad del documento oficial, una persona por cuenta y las restricciones por bloqueo |
+| 17 | [Listas de espera](./17-waiting-lists.md) | Cómo funcionan las listas por anuncio, los filtros del propietario y el recorrido de invitación a match |
+| 18 | [Unidades compartidas y compañeros de vivienda](./18-roommates.md) | Cómo se manejan contratos por cupo, solicitudes, revisión y veto de ocupantes, y visibilidad basada en consentimiento |
+| 19 | [Solicitudes de mantenimiento](./19-maintenance-tickets.md) | Cómo se integran al chat las reparaciones, prioridades y SLA, archivos, visitas, recordatorios y avisos del técnico |
+| 20 | [Búsqueda geográfica y puntos de interés](./20-geo-search-and-poi.md) | Cómo se resuelve la búsqueda por punto y radio, el catálogo importado desde OSM y las decisiones de mapas y teselas |
+| 21 | [Recorridos complementarios](./21-journey-completions.md) | Cómo se completan visitas, búsquedas guardadas, alertas, comparación, búsqueda de compañeros, hoja de vida de alquiler, fiador, denuncias, bloqueos, reglas de vivienda, anuncios verificados y finalización del contrato |
+| 22 | [Suscripciones y permisos](./22-subscriptions-and-entitlements.md) | Cómo el módulo MON administra planes, acceso a capacidades, cobro recurrente con facturación electrónica, recuperación de impagos y anuncios destacados |
 
-## Language & conventions
+## Principios que gobiernan el diseño
 
-- Docs and code identifiers are in **English** (the prototype README is Spanish; new docs and code
-  standardize on English so the team can grow internationally).
-- Decision records use the mini-ADR format: **Context → Decision → Alternatives → Trade-offs →
-  Revisit when**.
-- Code samples in these docs are normative: naming, file layout, and class shapes shown here are
-  the ones to use.
+Estos cinco criterios sirven para resolver decisiones cotidianas sin añadir complejidad que el
+producto todavía no necesita.
+
+1. **Núcleo predecible, bordes intercambiables.** El dominio central —usuarios, propiedades,
+   contratos y pagos— se apoya en clases TypeScript directas y transacciones PostgreSQL. Las
+   piezas que realmente pueden variar —caché, recomendaciones, pasarela de pago, IA,
+   almacenamiento y colas— se exponen mediante puertos con adaptadores seleccionados por
+   variables de entorno.
+
+2. **Cada patrón debe justificar su coste.** Un patrón se adopta únicamente cuando protege frente
+   a una variación o un modo de fallo concreto. El [documento 04](./04-design-patterns.md)
+   registra también los patrones descartados y las razones, para evitar que se incorporen por
+   inercia bajo una etiqueta de arquitectura empresarial.
+
+3. **La base de datos protege invariantes; el código gobierna procesos.** PostgreSQL debe asegurar
+   unicidad, integridad referencial y consistencia monetaria mediante restricciones y
+   transacciones. Las transiciones de negocio corresponden a máquinas de estado explícitas.
+   Ninguna regla crítica puede depender únicamente de una convención de uso.
+
+4. **Se diseña para la etapa siguiente y se construye para la actual.** Cada componente indica en
+   qué etapa necesita evolucionar y cuál es el punto de extensión previsto; el
+   [documento 01](./01-vision-and-stages.md) define esas etapas. La infraestructura de etapa 3 no
+   se adelanta a la etapa 1, pero la implementación inicial conserva las uniones necesarias para
+   crecer sin rehacer el dominio.
+
+5. **Una capacidad operable debe ser observable.** Cada módulo de producción debe entregar logs
+   estructurados, métricas y eventos de dominio. Poder diagnosticar el sistema en producción es
+   parte de su definición de terminado.
+
+## Convenciones de trabajo
+
+- La documentación de entrada se presenta en español; los identificadores de código permanecen
+  en inglés para conservar las convenciones del ecosistema técnico.
+- Los registros de decisión siguen un formato mini-ADR:
+  **Context → Decision → Alternatives → Trade-offs → Revisit when**.
+- Los ejemplos de código son normativos: los nombres, la distribución de archivos y las formas de
+  las clases que muestran son los previstos para la implementación.
