@@ -1,210 +1,203 @@
-# bilo Backend (MVP)
+<div align="center">
 
-Backend NestJS + PostgreSQL + Prisma para bilo — plataforma de alquiler residencial tipo "Tinder + Airbnb + trust layer" para LATAM.
+# bilo
 
-> **📐 Production backend design:** este repo es el prototipo. El diseño completo del backend
-> de producción (arquitectura, decisiones, trade-offs, patrones, módulos, roadmap) vive en
-> [`docs/design/`](./docs/design/README.md). Leer eso antes de escribir código nuevo.
+### Del descubrimiento de una propiedad a una relación de alquiler verificable.
 
-## Stack
+Backend de una plataforma residencial que reúne búsqueda por afinidad, acuerdos entre inquilinos y propietarios, pagos y reputación en un mismo recorrido.
 
-- Node.js 20 + TypeScript
-- NestJS 10
-- PostgreSQL 16 + Prisma 5
-- JWT + Passport (Google OAuth + mock-login para demo)
-- class-validator + Swagger / OpenAPI
-- EventEmitter para domain events
-- Docker + Docker Compose
+[![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?style=flat-square&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![SQLite](https://img.shields.io/badge/SQLite-MVP-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![API](https://img.shields.io/badge/API-REST%20%7C%20OpenAPI-0F766E?style=flat-square)](#superficie-técnica)
 
-## Estructura
+**[Recorrido](#un-alquiler-completo-no-solo-un-listado) · [Arquitectura](#arquitectura-del-prototipo) · [Ejecución](#ponerlo-en-marcha) · [Documentación](#mapa-de-documentación)**
 
+</div>
+
+---
+
+## Un alquiler completo, no solo un listado
+
+bilo parte de una premisa sencilla: encontrar una propiedad es apenas el comienzo. El producto conecta las decisiones que normalmente quedan repartidas entre portales, mensajería y comprobantes aislados.
+
+| Momento | Qué resuelve bilo | Evidencia en el backend |
+| :-- | :-- | :-- |
+| **Descubrir** | Ordena propiedades según presupuesto, ubicación y necesidades del inquilino. | Preferencias, catálogo, filtros, recomendaciones y swipes. |
+| **Acordar** | Convierte el interés en una decisión bilateral con un canal compartido. | Matches, aceptación del propietario y conversaciones asociadas. |
+| **Alquilar** | Conserva el contexto contractual y el historial de cobros. | Leases, métodos de pago, transacciones y eventos de pago. |
+| **Construir confianza** | Hace que el comportamiento dentro de la plataforma deje una señal verificable. | Trust score, ratings, disputas, evidencia y auditoría. |
+| **Acompañar** | Extiende la relación después de la firma. | Solicitudes de servicio, notificaciones y contexto asistido por IA. |
+
+El repositorio contiene el **prototipo funcional del backend** y, por separado, el diseño técnico y de negocio para llevarlo a producción. El proyecto continúa en desarrollo: la API actual valida el recorrido de producto con SQLite y adaptadores simulados; la documentación define la evolución hacia infraestructura y proveedores reales.
+
+## La trayectoria del producto
+
+```mermaid
+flowchart LR
+    A["Preferencias del inquilino"] --> B["Feed de propiedades"]
+    B --> C["Swipe e interés"]
+    C --> D["Match bilateral"]
+    D --> E["Conversación"]
+    E --> F["Lease"]
+    F --> G["Pagos programados"]
+    G --> H["Trust score"]
+    F --> I["Servicios y disputas"]
+    I --> H
+
+    J["Auditoría"] -. registra .-> C
+    J -. registra .-> D
+    J -. registra .-> F
+    J -. registra .-> G
+
+    classDef discovery fill:#E0F2FE,stroke:#0369A1,color:#0C4A6E;
+    classDef agreement fill:#EDE9FE,stroke:#7C3AED,color:#4C1D95;
+    classDef commerce fill:#CCFBF1,stroke:#0F766E,color:#134E4A;
+    classDef trust fill:#FEF3C7,stroke:#B45309,color:#78350F;
+    classDef platform fill:#F1F5F9,stroke:#475569,color:#1E293B;
+
+    class A,B,C discovery;
+    class D,E agreement;
+    class F,G commerce;
+    class H,I trust;
+    class J platform;
 ```
-bilo-backend/
-  prisma/
-    schema.prisma       # Todos los modelos + enums
-    seed.ts             # Datos demo (usuarios, propiedades, lease, pagos, trust)
-  src/
-    main.ts
-    app.module.ts
-    config/
-    common/             # decorators, guards, filters, types
-    prisma/             # PrismaService global
-    modules/
-      auth/             # Google OAuth + JWT + mock-login
-      users/
-      preferences/
-      properties/       # CRUD landlord + analytics
-      recommendations/  # Strategy: PostgresEngine + Neo4j stub
-      swipes/           # like/dislike/superlike
-      matches/          # accept/reject → crea conversación
-      conversations/    # chat REST
-      leases/           # crea pagos iniciales
-      payments/         # Strategy: StripeMockProvider
-      trust/            # Global. Listener de payment.paid/failed
-      ratings/
-      disputes/
-      services/         # property_services + service_requests
-      ai/               # Strategy: MockAIProvider con context DB
-      notifications/    # Global. Listener de muchos eventos
-      audit/            # Global. Audit logs centrales
-      health/           # /health + /health/db (Prisma ping)
-  docker-compose.yml
-  Dockerfile
-  .env.example
+
+## Arquitectura del prototipo
+
+La aplicación es un **monolito modular en NestJS**. Cada dominio expone controladores y servicios propios; Prisma concentra la persistencia; los efectos transversales reaccionan a eventos de dominio en lugar de acoplar los flujos principales.
+
+```text
+HTTP / OpenAPI
+      │
+      ▼
+Global JWT guard ──► Controllers ──► Application services ──► Prisma ──► SQLite
+                                             │
+                                             └── domain events
+                                                       │
+                                    ┌──────────────────┼──────────────────┐
+                                    ▼                  ▼                  ▼
+                                  Trust          Notifications          Audit
 ```
 
-## Cómo correr
+Tres bordes variables se resuelven mediante interfaces e inyección de dependencias:
 
-### Opción 1 — Docker Compose (recomendada)
+- `PAYMENT_PROVIDER`: procesamiento de pagos; actualmente `stripe_mock`.
+- `AI_PROVIDER`: respuestas sobre el contexto de propiedades y leases; actualmente `mock`.
+- `RECOMMENDATION_ENGINE`: selección de propiedades mediante Prisma; existe un adaptador Neo4j de sustitución, todavía sin integración real.
+
+Esta separación permite validar el dominio sin convertir dependencias externas en requisitos para ejecutar la demo.
+
+## Superficie técnica
+
+| Área | Capacidades implementadas |
+| :-- | :-- |
+| Identidad | Google OAuth, acceso de demostración, JWT de acceso y refresh, roles globales. |
+| Inventario | CRUD de propiedades, imágenes, filtros, preferencias y analítica básica. |
+| Afinidad | Recomendaciones, historial de swipes, creación y respuesta de matches. |
+| Comunicación | Conversaciones REST creadas al aceptar un match, mensajes y lectura. |
+| Operación del alquiler | Leases, calendario inicial de pagos, métodos y simulación de resultados. |
+| Confianza | Score e historial, ratings mutuos, disputas y registro de evidencia. |
+| Plataforma | Notificaciones persistidas, audit log, servicios asociados y health checks. |
+| Asistencia | Contexto por propiedad o lease y proveedor de IA intercambiable. |
+
+La API está versionada bajo `/api/v1`, valida DTOs globalmente y publica su contrato con Swagger. La autorización JWT se aplica como guard global; las rutas públicas se declaran explícitamente.
+
+## Ponerlo en marcha
+
+### Docker — recorrido más corto
+
+Requiere Docker con Compose. No necesita una base externa: SQLite queda persistido en `./data`.
 
 ```bash
-cd bilo-backend
-cp .env.example .env       # editar secrets si quieres
+cp .env.example .env
 docker compose up --build
 ```
 
-Esto levanta:
-- `postgres` en `localhost:5432` (db: `bilo`, user/pass: `bilo`/`bilo`).
-- `backend` en `localhost:3000`.
+El bootstrap sincroniza el schema y carga datos de demostración cuando la base está vacía. El servicio queda disponible en:
 
-El contenedor backend corre `prisma migrate deploy` antes de arrancar Nest.
+| Recurso | URL |
+| :-- | :-- |
+| OpenAPI / Swagger | `http://localhost:3001/api/v1/docs` |
+| Health | `http://localhost:3001/api/v1/health` |
+| Health de base de datos | `http://localhost:3001/api/v1/health/db` |
 
-Luego, para cargar datos demo:
+Para desactivar la carga automática usa `AUTO_SEED=false`; para utilizar únicamente el dataset estable usa `SEED_MODE=basic`.
 
-```bash
-docker compose exec backend npx prisma db seed
-```
+### Desarrollo local
 
-### Opción 2 — Local (sin Docker para el backend)
-
-Requiere Node 20 y Postgres corriendo (puedes usar `docker compose up postgres`).
+Requiere Node.js 20. La configuración de ejemplo ya apunta a `data/bilo.sqlite`.
 
 ```bash
-cd bilo-backend
 cp .env.example .env
-# editar DATABASE_URL si tu postgres no es localhost:5432
 npm install --legacy-peer-deps
-npx prisma generate
-npx prisma migrate dev --name init
-npx prisma db seed
+npm run prisma:generate
+npm run prisma:push
+npm run prisma:seed
 npm run start:dev
 ```
 
-## URLs útiles
-
-- API base: `http://localhost:3000/api/v1`
-- Swagger UI: `http://localhost:3000/api/v1/docs`
-- Health: `http://localhost:3000/api/v1/health`
-- Health DB: `http://localhost:3000/api/v1/health/db`
-
-## Demo end-to-end (mock-login)
-
-Todas las rutas requieren `Authorization: Bearer <token>` salvo las `@Public()`. Para la demo, usa `POST /api/v1/auth/mock-login` (no requiere Google real).
+En este modo la API utiliza el puerto `3000`. Para probar rutas protegidas sin credenciales de Google, `POST /api/v1/auth/mock-login` entrega tokens de demostración:
 
 ```bash
-# 1. Login mock como tenant
 curl -X POST http://localhost:3000/api/v1/auth/mock-login \
-  -H 'Content-Type: application/json' \
-  -d '{ "email": "ana@bilo.app", "fullName": "Ana", "role": "TENANT" }'
-
-# Guarda accessToken. Repite con landlord:
-curl -X POST http://localhost:3000/api/v1/auth/mock-login \
-  -H 'Content-Type: application/json' \
-  -d '{ "email": "carla@bilo.app", "fullName": "Carla", "role": "LANDLORD" }'
-
-# 2. Crea preferencias (tenant)
-curl -X PUT http://localhost:3000/api/v1/preferences/me \
-  -H "Authorization: Bearer $TENANT_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "budgetMin": 400, "budgetMax": 900, "acceptsPets": true }'
-
-# 3. Crear propiedad (landlord)
-curl -X POST http://localhost:3000/api/v1/properties \
-  -H "Authorization: Bearer $LANDLORD_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "title": "Apto Escazú", "description": "Lindo", "city": "San José", "zone": "Escazú", "monthlyPrice": 750, "depositAmount": 750, "bedrooms": 2, "petsAllowed": true, "parking": true, "furnished": true }'
-
-# 4. Feed de recomendaciones (tenant)
-curl http://localhost:3000/api/v1/recommendations/feed -H "Authorization: Bearer $TENANT_TOKEN"
-
-# 5. Swipe like
-curl -X POST http://localhost:3000/api/v1/swipes \
-  -H "Authorization: Bearer $TENANT_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "propertyId": "<PROP_ID>", "action": "LIKE" }'
-
-# 6. Crear match (tenant), aceptar (landlord)
-curl -X POST http://localhost:3000/api/v1/matches \
-  -H "Authorization: Bearer $TENANT_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "propertyId": "<PROP_ID>" }'
-
-curl -X POST http://localhost:3000/api/v1/matches/<MATCH_ID>/respond \
-  -H "Authorization: Bearer $LANDLORD_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "action": "accept" }'
-
-# 7. Mensaje en conversación
-curl -X POST http://localhost:3000/api/v1/conversations/<CONV_ID>/messages \
-  -H "Authorization: Bearer $TENANT_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "content": "Hola!" }'
-
-# 8. Crear lease (landlord)
-curl -X POST http://localhost:3000/api/v1/leases \
-  -H "Authorization: Bearer $LANDLORD_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "matchId": "<MATCH_ID>", "monthlyAmount": 750, "depositAmount": 750, "startDate": "2026-06-01T00:00:00Z" }'
-
-# 9. Simular pago exitoso
-curl -X POST http://localhost:3000/api/v1/payments/<PAYMENT_ID>/simulate-success \
-  -H "Authorization: Bearer $TENANT_TOKEN"
-
-# 10-11. Ver trust events + audit logs
-curl http://localhost:3000/api/v1/trust/me -H "Authorization: Bearer $TENANT_TOKEN"
-# audit-logs requiere ADMIN
-
-# 12. Crear disputa
-curl -X POST http://localhost:3000/api/v1/disputes \
-  -H "Authorization: Bearer $TENANT_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "leaseId": "<LEASE_ID>", "againstId": "<LANDLORD_ID>", "type": "MAINTENANCE_ISSUE", "title": "Goteo", "description": "Goteo en baño" }'
-
-# 13. Pregunta a la IA sobre la propiedad
-curl -X POST http://localhost:3000/api/v1/ai/property/<PROP_ID>/ask \
-  -H "Authorization: Bearer $TENANT_TOKEN" -H 'Content-Type: application/json' \
-  -d '{ "question": "Acepta mascotas?" }'
+  -H "Content-Type: application/json" \
+  -d '{"email":"ana@bilo.app","fullName":"Ana","role":"TENANT"}'
 ```
 
-## Patrones aplicados
+Swagger contiene la superficie completa y permite autorizar las siguientes solicitudes con el `accessToken` resultante.
 
-- **Strategy + Factory**: `PaymentProvider` (token `PAYMENT_PROVIDER`), `RecommendationEngine` (token `RECOMMENDATION_ENGINE`), `AIProvider` (token `AI_PROVIDER`).
-- **Domain Events** (EventEmitter2): `swipe.created`, `match.accepted`, `payment.paid`, `payment.failed`, `dispute.created`, `lease.created`, `trust.score_updated`, etc.
-- **@Global modules**: `Audit`, `Notifications`, `Trust` para no obligar a cada módulo a importarlos.
-- **Auth global**: `JwtAuthGuard` registrado como `APP_GUARD`. Endpoints públicos marcados con `@Public()`.
-- **Roles**: `@Roles(UserRole.LANDLORD)` + `@UseGuards(RolesGuard)` para autorización fina.
-- **Soft delete**: `deletedAt` en `User`, `Property`, `Lease`.
-- **Trazabilidad**: `payment_events`, `payment_transactions`, `trust_events`, `trust_score_history`, `audit_logs`.
+## Comandos que importan
 
-## Cosas que NO se implementan (a propósito, por scope MVP)
+| Comando | Propósito |
+| :-- | :-- |
+| `npm run start:dev` | Ejecuta NestJS con recarga durante desarrollo. |
+| `npm run build` | Limpia artefactos incrementales y compila TypeScript. |
+| `npm run prisma:push` | Sincroniza el schema de Prisma con SQLite. |
+| `npm run prisma:seed` | Carga el escenario de demostración estable. |
+| `npm run prisma:seed:live` | Intenta enriquecer el seed con listings externos y conserva fallbacks. |
+| `npm run prisma:studio` | Abre el explorador visual de Prisma. |
+| `npm run seed:sqlite:inside-airbnb` | Genera un catálogo SQLite paralelo a partir de Inside Airbnb. |
 
-- Pagos reales (solo `StripeMockPaymentProvider`).
-- OpenAI real (solo `MockAIProvider` con respuestas por keyword sobre el contexto DB).
-- Neo4j real (solo stub `Neo4jRecommendationEngine`).
-- WebSockets (chat es REST; el modelo está listo para subirse a websockets después).
-- Push notifications reales (sólo persistencia en `notifications`).
+> El catálogo de Inside Airbnb es una herramienta de exploración independiente. No alimenta automáticamente las tablas Prisma de la aplicación. Sus supuestos y límites están documentados en [`docs/sqlite-realistic-seeding.md`](./docs/sqlite-realistic-seeding.md).
 
-## Comandos útiles
+## Límites deliberados del MVP
 
-```bash
-npm run build               # nest build
-npm run start:dev           # nodemon
-npm run prisma:migrate      # prisma migrate dev
-npm run prisma:deploy       # migrate deploy (prod / docker)
-npm run prisma:seed         # ts-node prisma/seed.ts
-npm run prisma:studio       # Prisma Studio en :5555
-npm run seed:sqlite:inside-airbnb   # catalogo SQLite paralelo desde Inside Airbnb
-```
+El estado del repositorio se expresa de forma explícita para que demo, diseño y producción no se confundan:
 
-## SQLite seed realista
+| En el prototipo | Evolución diseñada |
+| :-- | :-- |
+| SQLite como sistema de persistencia | PostgreSQL administrado y migraciones disciplinadas. |
+| Pago determinista simulado | Gateway real, idempotencia, conciliación y webhooks. |
+| Respuestas de IA por contexto y reglas | Proveedor real detrás del mismo puerto, cuando el producto lo justifique. |
+| Recomendaciones con consultas Prisma | Estrategias SQL avanzadas y proyección en Neo4j al alcanzar escala suficiente. |
+| Chat mediante REST | Gateway WebSocket cuando la simultaneidad lo requiera. |
+| Eventos dentro del proceso | Outbox y colas persistentes en etapas posteriores. |
+| Notificaciones almacenadas | Canales push, email o mensajería mediante adaptadores. |
 
-Agregue un flujo paralelo para poblar un `.sqlite` con listings reales o semirrealistas descargados por HTTP desde Inside Airbnb, sin depender de PostgreSQL ni tocar el schema Prisma principal.
+No hay una suite automatizada conectada al `package.json` todavía. La estrategia, los niveles de prueba y los gates previstos están definidos en [`docs/design/11-testing-strategy.md`](./docs/design/11-testing-strategy.md).
 
-- Script: [scripts/inside_airbnb_to_sqlite.py](C:\Users\jfzum\Downloads\BILO\bilo-backend\scripts\inside_airbnb_to_sqlite.py)
-- Documentacion: [docs/sqlite-realistic-seeding.md](C:\Users\jfzum\Downloads\BILO\bilo-backend\docs\sqlite-realistic-seeding.md)
+## Mapa de documentación
 
-```bash
-npm run seed:sqlite:inside-airbnb
-```
+El código explica el prototipo; estos documentos explican las decisiones que lo rodean y el camino de implementación.
+
+| Colección | Punto de entrada | Contenido |
+| :-- | :-- | :-- |
+| Diseño técnico | [`docs/design/`](./docs/design/README.md) | Arquitectura objetivo, módulos, datos, seguridad, eventos, operación y roadmap. |
+| Requisitos | [`docs/requirements/`](./docs/requirements/README.md) | ERS, trazabilidad y proceso de entrega. |
+| Producto y negocio | [`docs/business/`](./docs/business/README.md) | Mercado inicial, modelo, MVP, métricas y riesgos. |
+| Marco legal | [`docs/legal/costa-rica/`](./docs/legal/costa-rica/README.md) | Mapa de consideraciones regulatorias para Costa Rica; no constituye asesoría legal. |
+
+La distinción es intencional: **el código representa lo ejecutable hoy; `docs/design` representa el sistema que se está construyendo**.
+
+## Estado
+
+bilo está en desarrollo activo por un equipo pequeño. Este repositorio se concentra en el backend, la validación del recorrido central y la documentación de una transición responsable desde prototipo hacia producto.
+
+<div align="center">
+
+`discover → agree → rent → build trust`
+
+</div>
